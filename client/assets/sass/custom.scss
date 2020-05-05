@@ -1,0 +1,70 @@
+.main-panel {
+  &.full {
+    width: 100%;
+    position: absolute;
+  }
+}
+
+#__nuxt {
+  overflow-x: hidden;
+}
+
+.fix-bottom {
+  position: relative;
+  width: 100%;
+  bottom: 0;
+  background: #f4f3ef;
+}
+
+.v-select {
+  background-color: #fffcf5;
+  border-radius: 4px;
+  color: #66615b;
+  font-size: 14px;
+  transition: background-color 0.3s ease 0s;
+  box-shadow: none;
+  padding-left: 0;
+  .vs__dropdown-toggle {
+    padding: 5px 0;
+  }
+}
+
+.nl2br {
+  white-space: pre;
+}
+
+a {
+  cursor: pointer;
+  transition: color .3s;
+}
+
+.round-img {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(100, 109, 110, 0.26);
+
+  &.small {
+    width: 5rem;
+    height: 5rem;
+  }
+  &.big {
+    width: 20rem;
+    height: 20rem;
+  }
+}
+
+.form-control {
+  background: #fff;
+}
+
+.form-group {
+  padding: 0;
+}
+
+.multiselect__tags {
+  border: 1px solid #CCC5B9;
+}

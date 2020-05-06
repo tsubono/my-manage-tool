@@ -34,7 +34,7 @@
           tooltips: {
             callbacks: {
               label: function (tooltipItem, data) {
-                return tooltipItem.yLabel + ' 円';
+                return data.datasets[0].data[tooltipItem.index] + ' 円';
               }
             }
           }

@@ -80,7 +80,7 @@ class Utility {
    * @returns {string}
    */
   getImageUrl = (path) => {
-    return process.env.APP_URL + (path ? path : 'img/icon-no-image.png');
+    return process.env.APP_URL + "/" + (path ? path : 'img/icon-no-image.png');
   }
 }
 

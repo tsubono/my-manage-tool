@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Analytic;
+use App\Models\User;
+use Carbon\Carbon;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 /**
@@ -38,6 +41,13 @@ class AuthController extends Controller
         } catch (JWTException $e) {
             return response()->json(['error' => $e->getMessage()], 401);
         }
+
+        // ログインログを登録
+        Analytic::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'login',
+            'created_at' => Carbon::now(),
+        ]);
 
         return response()->json(compact('token'));
     }

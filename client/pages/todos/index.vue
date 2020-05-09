@@ -203,6 +203,7 @@
 
         input[type=checkbox] {
           visibility: hidden;
+          position: absolute;
         }
 
         .form-group {
@@ -264,6 +265,7 @@
     @media (max-width: 480px) {
       .list {
         padding: 0 0 30px 0;
+        margin: 15px;
 
         .item {
           width: 100%;
@@ -272,7 +274,7 @@
           padding: 0;
 
           .title-label {
-            padding: 0;
+            padding: 10px 0;
           }
 
           .title-input {

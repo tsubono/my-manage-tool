@@ -57,11 +57,14 @@
 
 <style lang="scss" scoped>
   #login {
-    width: 360px;
     margin: 0 auto;
     padding: 10px;
     text-align: center;
     height: 550px;
+
+    @media (min-width: 480px) {
+      width: 360px;
+    }
 
     .login-form {
       padding: 2em;

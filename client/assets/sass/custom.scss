@@ -1,8 +1,32 @@
+html, body{
+  height: 100%;
+}
+.wrapper {
+  position: relative;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%
+}
+
 .main-panel {
+  min-height: 100vh;
+
+  @media (max-width: 480px) {
+    position: absolute;
+  }
+
   &.full {
     width: 100%;
     position: absolute;
   }
+
+  .content {
+    margin-bottom: 35px;
+  }
+}
+
+.sidebar.sidebar-mobile {
+  position: absolute;
 }
 
 #__nuxt {
@@ -10,10 +34,10 @@
 }
 
 .fix-bottom {
-  position: relative;
-  width: 100%;
-  bottom: 0;
   background: #f4f3ef;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 .v-select {

@@ -2,11 +2,11 @@
   <div :class="{'nav-open': sidebarStore.showSidebar}">
     <div class="wrapper">
       <Sidebar></Sidebar>
-      <SidebarMobile></SidebarMobile>
       <no-ssr>
         <notifications></notifications>
       </no-ssr>
       <div class="main-panel">
+        <SidebarMobile></SidebarMobile>
         <top-navbar></top-navbar>
         <main-content></main-content>
         <content-footer></content-footer>

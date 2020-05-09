@@ -34,7 +34,7 @@
 
 <style lang="scss" scoped>
   .modal-mask {
-    position: fixed;
+    position: absolute;
     z-index: 9998;
     top: 0;
     left: 0;

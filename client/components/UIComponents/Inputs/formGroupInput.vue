@@ -8,6 +8,9 @@
            :value="value"
            @input="updateValue($event.target.value)"
            v-on:input="model=$event.target.value">
+    <div v-for="(error, index) in errors" :key="index" :value="error" class="text-danger error">
+      {{ error }}
+    </div>
   </div>
 </template>
 <script>
@@ -15,7 +18,8 @@
     inheritAttrs: false,
     props: {
       value: [String, Number],
-      label: String
+      label: String,
+      errors: Array,
     },
     methods: {
       updateValue(value) {
@@ -27,5 +31,9 @@
 <style lang="scss" scoped>
   .input-wrapper {
     padding:0;
+  }
+
+  .error {
+    padding-top: 5px;
   }
 </style>

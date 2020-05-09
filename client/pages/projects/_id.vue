@@ -5,7 +5,7 @@
         <!-- project form -->
         <project-form
           :clientOptions="$utility.getClientOptions(clients)"
-          :statusOptions="$utility.getStatusOptions(statuses)"
+          :statuses="statuses"
           :project="project"
           :labelOptions="labels"
           @submit="submit"

@@ -39,6 +39,7 @@ Route::group([
     Route::resource('clients', 'ClientController', ['only' => ['index', 'show']]);
     Route::resource('products', 'ProductController', ['only' => ['index', 'show']]);
     Route::get('projects/statuses', 'ProjectController@getStatuses');
+    Route::post('projects/statuses', 'ProjectController@updateStatuses');
     Route::resource('projects', 'ProjectController', ['only' => ['index', 'show']]);
     Route::get('labels/project', 'LabelController@getProjectLabels');
     Route::resource('labels', 'LabelController', ['only' => ['index']]);

@@ -20,6 +20,20 @@
             >
             </multiselect>
           </div>
+          <div class="form-group col-md-7 col-xs-12">
+            <multiselect
+              v-model="form.status"
+              :options="$utility.getStatusOptions(statuses)"
+              label="name"
+              track-by="id"
+              placeholder="ステータス">
+            </multiselect>
+          </div>
+          <div class="form-group col-md-2 col-md-offset-1 col-xs-12">
+            <button class="btn btn-success btn-wd" @click="toggleStatusModal">
+              ステータス管理
+            </button>
+          </div>
           <fg-input
             type="text"
             class="col-md-10 col-xs-12"
@@ -60,15 +74,6 @@
               placeholder="ラベル">
             </multiselect>
           </div>
-          <div class="form-group col-md-10 col-xs-12">
-            <multiselect
-              v-model="form.status"
-              :options="statusOptions"
-              label="name"
-              track-by="id"
-              placeholder="ステータス">
-            </multiselect>
-          </div>
         </div>
       </div>
       <!-- /form items -->
@@ -84,12 +89,27 @@
       <!-- /buttons -->
     </div>
     <!-- /.content -->
+    <StatusModal
+      v-if="isShowStatusModal"
+      :statuses="statuses"
+      @close="toggleStatusModal"
+    />
   </div>
 </template>
 
 <script>
+  import StatusModal from '~/components/modal/StatusModal'
   export default {
-    layout: "dashboard",
+    components: {
+      StatusModal,
+    },
+    head () {
+      return {
+        bodyAttrs: {
+          class: this.isShowStatusModal ? 'modal-body-background' : ''
+        }
+      }
+    },
     props: {
       project: {
         type: Object,
@@ -101,13 +121,14 @@
           start_date: null,
           limit_date: null,
           status_id: null,
+          labels: [],
         })
       },
       clientOptions: {
         type: Array,
         'default': () => []
       },
-      statusOptions: {
+      statuses: {
         type: Array,
         'default': () => []
       },
@@ -118,10 +139,14 @@
     },
     data() {
       return {
-        form: this.project
+        form: this.project,
+        isShowStatusModal: false,
       }
     },
     methods: {
+      toggleStatusModal() {
+        this.isShowStatusModal = !this.isShowStatusModal;
+      },
       submit() {
         this.$emit('submit', this.project)
       },

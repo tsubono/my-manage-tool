@@ -34,4 +34,16 @@ export const actions = {
         console.log(error);
       });
   },
+  async updateStatuses({ commit }, { statuses, deletedStatusIds } ) {
+    await this.$axios.$post('/projects/statuses', {
+      statuses: statuses,
+      deleted_ids: deletedStatusIds,
+    })
+      .then((response) => {
+        commit('setStatus', response.statuses);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
 };

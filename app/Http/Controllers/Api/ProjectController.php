@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\ProjectStatus;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ProjectController
@@ -41,23 +43,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = $this->project->all();
+        $projects = $this->project->get();
         return response()->json(['projects' => $projects], 200, [], JSON_PRETTY_PRINT);
-    }
-
-    /**
-     * 詳細
-     *
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show($id)
-    {
-        $project = $this->project->query()->find($id);
-        if (empty($project)) {
-            return response()->json([], 404, [], JSON_PRETTY_PRINT);
-        }
-        return response()->json($project, 200, [], JSON_PRETTY_PRINT);
     }
 
     /**
@@ -91,7 +78,50 @@ class ProjectController extends Controller
      */
     public function getStatuses()
     {
-        $statuses = $this->projectStatus->all();
+        $statuses = $this->projectStatus->get();
         return response()->json($statuses, 200, [], JSON_PRETTY_PRINT);
+    }
+
+
+    /**
+     * ステータスを更新する
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateStatuses(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $statuses = $request->get('statuses');
+            $deleted_ids = $request->get('deleted_ids', []);
+            foreach ($statuses as $status) {
+                // ログイン中のユーザーを設定
+                $status['user_id'] = auth()->user()->id;
+                // idがnullの場合は新規登録
+                if (is_null($status['id'])) {
+                    $this->projectStatus->create($status);
+                // idが入っている場合は更新
+                } else {
+                    $targetStatus = $this->projectStatus->find($status['id']);
+                    $targetStatus->update($status);
+                }
+            }
+            // 削除するidがあれば削除処理
+            foreach ($deleted_ids as $deleted_id) {
+                $this->projectStatus->findOrFail($deleted_id)->delete();
+            }
+
+            $response = ['status' => 'OK', 'statuses' => $this->projectStatus->get()];
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            $response['status'] = 'NG';
+            $response['message'] = $e->getMessage();
+            return response()->json($response, 422, [], JSON_PRETTY_PRINT);
+        }
+
+        return response()->json($response, 200, [], JSON_PRETTY_PRINT);
     }
 }

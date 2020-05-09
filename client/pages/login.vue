@@ -14,6 +14,11 @@
           <div v-if="error" class="text-danger error">
             {{ error }}
           </div>
+          <div class="register-link">
+            <nuxt-link :to="{ name:'register' }">
+              新規登録
+            </nuxt-link>
+          </div>
         </div>
       </div>
     </div>
@@ -72,6 +77,10 @@
       .error {
         margin-top: 10px;
       }
+    }
+
+    .register-link {
+      padding-top: 10px;
     }
   }
 </style>

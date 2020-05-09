@@ -15,6 +15,8 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->comment('ユーザーID');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->string('name')->comment('名前');
             $table->string('address')->comment('住所')->nullable();
             $table->text('note')->nullable()->comment('備考');
@@ -23,6 +25,7 @@ class CreateClientsTable extends Migration
             $table->string('icon_path')->nullable()->comment('アイコンパス');
             $table->boolean('status')->default(true)->comment('ステータス: 有効 / 無効');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

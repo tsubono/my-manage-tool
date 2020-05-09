@@ -21,6 +21,7 @@ class DummyDataSeeder extends Seeder
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
+        DB::table('users')->truncate();
         DB::table('analytics')->truncate();
         DB::table('clients')->truncate();
         DB::table('client_label')->truncate();
@@ -32,8 +33,18 @@ class DummyDataSeeder extends Seeder
         DB::table('todos')->truncate();
         DB::table('sales')->truncate();
 
+        DB::table('users')->insert([
+            [
+                'name' => 'user1',
+                'email' => 'user1@user.com',
+                'password' => \Hash::make('password1'),
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]
+        ]);
         DB::table('clients')->insert([
                 [
+                    'user_id' => 1,
                     'name' => 'システム開発会社 xx',
                     'address' => '大阪府大阪市北区扇町 xxx',
                     'note' => "Webシステム開発の会社\r\n 今後は機械学習方面にも進出予定\r\n SES事業から受託に移行中",
@@ -44,6 +55,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => 'システム開発会社 ◯◯',
                     'address' => '大阪府大阪市中央区本町 xxx',
                     'note' => "求人仲介事業をメインに扱う会社 \r\n 求人サイトを複数運営しており、機能追加・改修がメインとなる",
@@ -54,6 +66,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => 'デザイン会社 xx',
                     'address' => '兵庫県明石市相生町 xxx',
                     'note' => "Webをメインとするデザイン製作会社\r\n デザイナーは多数いるがエンジニアが不足しているとのこと",
@@ -64,6 +77,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => 'デザイン会社 ◯◯',
                     'address' => '京都府京都市中京区柏屋町 xxx',
                     'note' => "京都にあるデザイン製作会社\r\n 紙媒体からWebまで幅広く案件あり\r\n\r\n オフィスがおしゃれ",
@@ -74,6 +88,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => 'ゲーム制作会社 xx',
                     'address' => '大阪府大阪市浪速区湊町 xxx',
                     'note' => "アプリをメインとしたゲーム制作会社\r\n API側はほぼ業務委託で回している",
@@ -84,6 +99,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => 'おさかなやさん ◯◯',
                     'address' => '大阪府大阪市中央区日本橋2-4-1 xxx',
                     'note' => "黒門市場にある魚屋さん\r\n ECサイトを展開予定\r\n\r\n のどぐろが絶品",
@@ -99,26 +115,55 @@ class DummyDataSeeder extends Seeder
 
         DB::table('project_statuses')->insert([
                 [
+                    'user_id' => 1,
                     'name' => '新規受付',
                     'color' => '#7A9E9F',
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '進行中',
                     'color' => '#EB5E28',
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '完了',
                     'color' => '#41B883',
                 ],
                 [
+                    'user_id' => 1,
                     'name' => 'キャンセル',
                     'color' => '#F3BB45',
                 ],
             ]
         );
 
+        DB::table('sale_statuses')->insert([
+                [
+                    'user_id' => 1,
+                    'name' => '仮確定',
+                    'color' => '#7A9E9F',
+                ],
+                [
+                    'user_id' => 1,
+                    'name' => '確定',
+                    'color' => '#EB5E28',
+                ],
+                [
+                    'user_id' => 1,
+                    'name' => '請求書送付済み',
+                    'color' => '#F3BB45',
+                ],
+                [
+                    'user_id' => 1,
+                    'name' => '入金済み',
+                    'color' => '#41B883',
+                ],
+            ]
+        );
+
         DB::table('projects')->insert([
                 [
+                    'user_id' => 1,
                     'client_id' => 1,
                     'name' => '顧客管理システム',
                     'content' => "インフラ整備会社の顧客管理システム開発\r\nデザインは管理画面テンプレートを使用",
@@ -129,6 +174,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'client_id' => 2,
                     'name' => '求人システム',
                     'content' => "稼働中の求人システムの改修\r\nチケットが切られるのでissue単位での対応",
@@ -139,6 +185,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'client_id' => 3,
                     'name' => '地域ポータルサイト',
                     'content' => "デザインと仕様書は先方から支給(psd)\r\n受け取り次第コーディング・システム組み込み開始",
@@ -149,6 +196,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'client_id' => 4,
                     'name' => 'LPサイトお問い合わせフォーム',
                     'content' => "LPサイトのお問い合わせフォーム実装\r\nデザイン及びコーディングデータは先方から支給\r\n\r\n要セキュリティ対策 (CSRF / XSS など)",
@@ -159,6 +207,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'client_id' => 5,
                     'name' => 'iosアプリのAPI開発',
                     'content' => "2021年リリース予定のiosアプリのAPI開発\r\n作業指示は先方のディレクターからいただく",
@@ -169,6 +218,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'client_id' => 6,
                     'name' => 'ECサイト開発',
                     'content' => "取扱商品のECサイト開発\r\n先方はWebに詳しくないので密な打ち合わせが必要",
@@ -183,6 +233,7 @@ class DummyDataSeeder extends Seeder
 
         DB::table('sales')->insert([
                 [
+                    'user_id' => 1,
                     'project_id' => 1,
                     'planned_deposit_date' => '2020-1-31',
                     'deposit_date' => '2020-1-31',
@@ -191,6 +242,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 1,
                     'planned_deposit_date' => '2020-2-28',
                     'deposit_date' => '2020-2-28',
@@ -199,6 +251,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 2,
                     'planned_deposit_date' => '2020-2-28',
                     'deposit_date' => '2020-2-28',
@@ -207,6 +260,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 3,
                     'planned_deposit_date' => '2020-3-15',
                     'deposit_date' => '2020-3-15',
@@ -215,6 +269,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 1,
                     'planned_deposit_date' => '2020-3-31',
                     'deposit_date' => '2020-3-31',
@@ -223,6 +278,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 2,
                     'planned_deposit_date' => '2020-3-31',
                     'deposit_date' => '2020-3-31',
@@ -231,6 +287,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 1,
                     'planned_deposit_date' => '2020-4-30',
                     'deposit_date' => '2020-4-30',
@@ -239,6 +296,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 2,
                     'planned_deposit_date' => '2020-4-30',
                     'deposit_date' => '2020-4-30',
@@ -247,6 +305,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 3,
                     'planned_deposit_date' => '2020-4-30',
                     'deposit_date' => '2020-4-30',
@@ -255,6 +314,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 5,
                     'planned_deposit_date' => '2020-4-30',
                     'deposit_date' => null,
@@ -263,6 +323,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 4,
                     'planned_deposit_date' => '2020-5-1',
                     'deposit_date' => '2020-5-1',
@@ -271,6 +332,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 1,
                     'planned_deposit_date' => '2020-5-30',
                     'deposit_date' => null,
@@ -279,6 +341,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 2,
                     'planned_deposit_date' => '2020-5-30',
                     'deposit_date' => null,
@@ -287,6 +350,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 5,
                     'planned_deposit_date' => '2020-5-30',
                     'deposit_date' => null,
@@ -295,6 +359,7 @@ class DummyDataSeeder extends Seeder
                     'note' => null,
                 ],
                 [
+                    'user_id' => 1,
                     'project_id' => 6,
                     'planned_deposit_date' => '2020-5-25',
                     'deposit_date' => null,
@@ -307,30 +372,37 @@ class DummyDataSeeder extends Seeder
 
         DB::table('labels')->insert([
                 [
+                    'user_id' => 1,
                     'name' => '新規',
                     'type' => 1,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '見積もり済み',
                     'type' => 1,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '先方チェック待ち',
                     'type' => 1,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '納品完了',
                     'type' => 1,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '請求済み',
                     'type' => 1,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '入金済み',
                     'type' => 1,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '毎週火曜打ち合わせ',
                     'type' => 1,
                 ],
@@ -395,26 +467,32 @@ class DummyDataSeeder extends Seeder
 
         DB::table('labels')->insert([
                 [
+                    'user_id' => 1,
                     'name' => '新規',
                     'type' => 2,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '要客先打ち合わせ',
                     'type' => 2,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '出向あり',
                     'type' => 2,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => 'フルリモート',
                     'type' => 2,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '単発',
                     'type' => 2,
                 ],
                 [
+                    'user_id' => 1,
                     'name' => '継続あり',
                     'type' => 2,
                 ],
@@ -475,6 +553,7 @@ class DummyDataSeeder extends Seeder
 
         DB::table('memos')->insert([
                 [
+                    'user_id' => 1,
                     'title' => 'Vueで要素を表示 / 非表示時にアニメーションさせる',
                     'content' => '- アニメーションさせたい要素を`transition`( = ラッパーコンポーネント)で囲む
 - `transition`のname属性に好きな文字列を設定
@@ -506,6 +585,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'title' => '認証でjwt-authを使ってみる',
                     'content' => "- <a href=\"https://jwt-auth.readthedocs.io/en/develop/quick-start/\" target=\"_blank\">参考サイト1</a>
 - <a href=\"https://dev.to/mrnaif2018/how-to-make-nuxt-auth-working-with-jwt-a-definitive-guide-9he\" target=\"_blank\">参考サイト2</a>",
@@ -513,6 +593,7 @@ class DummyDataSeeder extends Seeder
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'title' => '【React】都道府県セレクトボックスめも',
                     'content' => '### 定数定義
 ```js
@@ -588,6 +669,7 @@ class Form extends Component {
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'title' => 'Nuxtで複数のAPIを呼ぶと画面描画が遅くなる',
                     'content' => "promise.allで解決した
 
@@ -602,6 +684,7 @@ class Form extends Component {
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'title' => 'Nuxtで金額をカンマ区切りで表示',
                     'content' => "### plugins/filter.jsを作成
 
@@ -628,6 +711,7 @@ Vue.filter('price', function (value) {
                     'updated_at' => $now,
                 ],
                 [
+                    'user_id' => 1,
                     'title' => '読みたい本',
                     'content' => "- <a href=\"https://www.amazon.co.jp/dp/4492762396/?coliid=I2HE4HI7TZV7B9&colid=1Q6YNY42VUHES&psc=1&ref_=lv_ov_lig_dp_it\" target=\"_blank\">AI vs. 教科書が読めない子どもたち</a>
 - <a href=\"https://www.amazon.co.jp/dp/B0851BGDQG/?coliid=I1D83DLWK7PEAY&colid=13J5LII2J9Y7&psc=0&ref_=lv_ov_lig_dp_it\" target=\"_blank\">実践Firestore</a>
@@ -644,30 +728,35 @@ Vue.filter('price', function (value) {
 
         DB::table('todos')->insert([
                 [
+                    'user_id' => 1,
                     'title' => '【システム開発会社 ◯◯】契約書に刻印して返送する',
                     'status' => true,
                     'limit_datetime' => '2020-2-10',
                     'sort' => 1,
                 ],
                 [
+                    'user_id' => 1,
                     'title' => '【システム開発会社 ◯◯】2020年4月分請求書発行',
                     'status' => true,
                     'limit_datetime' => '2020-5-5',
                     'sort' => 2,
                 ],
                 [
+                    'user_id' => 1,
                     'title' => '【デザイン会社 ◯◯】2020年5月分請求書発行',
                     'status' => false,
                     'limit_datetime' => '2020-6-5',
                     'sort' => 3,
                 ],
                 [
+                    'user_id' => 1,
                     'title' => '税理士さんに確定申告関連書類送る',
                     'limit_datetime' => '2020-2-28',
                     'status' => true,
                     'sort' => 4,
                 ],
                 [
+                    'user_id' => 1,
                     'title' => 'type-C ケーブル買いに行く',
                     'limit_datetime' => null,
                     'status' => false,

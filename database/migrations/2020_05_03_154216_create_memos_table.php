@@ -15,9 +15,12 @@ class CreateMemosTable extends Migration
     {
         Schema::create('memos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->comment('ユーザーID');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->string('title')->comment('タイトル');
             $table->longText('content')->comment('内容');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -15,29 +15,11 @@ class CreateSaleStatusesTable extends Migration
     {
         Schema::create('sale_statuses', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->comment('ユーザーID');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->string('name')->comment('名称');
             $table->string('color')->comment('色');
         });
-
-        DB::table('sale_statuses')->insert([
-                [
-                    'name' => '仮確定',
-                    'color' => '#7A9E9F',
-                ],
-                [
-                    'name' => '確定',
-                    'color' => '#EB5E28',
-                ],
-                [
-                    'name' => '請求書送付済み',
-                    'color' => '#F3BB45',
-                ],
-                [
-                    'name' => '入金済み',
-                    'color' => '#41B883',
-                ],
-            ]
-        );
     }
 
     /**

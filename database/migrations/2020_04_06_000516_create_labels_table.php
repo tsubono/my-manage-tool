@@ -15,6 +15,8 @@ class CreateLabelsTable extends Migration
     {
         Schema::create('labels', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->comment('ユーザーID');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->string('name')->comment('名称');
             $table->string('color')->default('#7A9E9F')->comment('カラー');
             $table->smallInteger('type')->comment('種別');

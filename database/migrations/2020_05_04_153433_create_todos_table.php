@@ -15,6 +15,8 @@ class CreateTodosTable extends Migration
     {
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->comment('ユーザーID');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->unsignedBigInteger('parent_todo_id')->comment('親todoID')->nullable();
             $table->string('title')->comment('タイトル');
             $table->longText('content')->comment('内容')->nullable();
@@ -22,6 +24,7 @@ class CreateTodosTable extends Migration
             $table->boolean('status')->comment('完了ステータス')->default(false);
             $table->integer('sort')->comment('順番')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

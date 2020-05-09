@@ -15,6 +15,8 @@ class CreateProjectsTable extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->comment('ユーザーID');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->unsignedBigInteger('client_id')->comment('取引先ID');
             $table->foreign('client_id')->references('id')->on('clients')->onUpdate('cascade');
             $table->string('name')->comment('名称');
@@ -24,6 +26,7 @@ class CreateProjectsTable extends Migration
             $table->unsignedBigInteger('status_id')->comment('ステータスID');
             $table->foreign('status_id')->references('id')->on('clients')->onUpdate('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

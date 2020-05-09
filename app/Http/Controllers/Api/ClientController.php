@@ -33,7 +33,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = $this->client->all();
+        $clients = $this->client->get();
         return response()->json(['clients' => $clients], 200, [], JSON_PRETTY_PRINT);
     }
 

@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Scopes\LoginUser;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Memo
@@ -11,6 +13,14 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Memo extends Model
 {
+    use SoftDeletes;
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new LoginUser());
+    }
+
     /**
      * ホワイトリスト
      *

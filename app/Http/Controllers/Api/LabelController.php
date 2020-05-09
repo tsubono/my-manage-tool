@@ -39,7 +39,7 @@ class LabelController extends Controller
         // clientのラベル
         $clientLabels = [];
 
-        $labels = $this->label->all();
+        $labels = $this->label->get();
         // typeに応じて振り分け
         foreach ($labels as $label) {
             if ($label['type'] === Label::TYPE_PROJECT) {

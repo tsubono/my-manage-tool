@@ -130,7 +130,7 @@ class SaleController extends Controller
      */
     public function getStatuses()
     {
-        $statuses = $this->saleStatus->all();
+        $statuses = $this->saleStatus->get();
         return response()->json(['statuses' => $statuses], 200, [], JSON_PRETTY_PRINT);
     }
 }

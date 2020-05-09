@@ -16,7 +16,7 @@ class Utility {
    * @returns {boolean}
    */
   chkCanEdit = (notifications, user) => {
-    if (!user.is_admin) {
+    if (!user.can_edit) {
       notifications.notify(
         {
           message: '<h4>Sorry...</h4><p>編集権限がありません</p>',

@@ -33,7 +33,7 @@ class MemoController extends Controller
      */
     public function index()
     {
-        $memos = $this->memo->all();
+        $memos = $this->memo->get();
         return response()->json(['memos' => $memos], 200, [], JSON_PRETTY_PRINT);
     }
 }

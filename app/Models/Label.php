@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\LoginUser;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -17,6 +18,12 @@ class Label extends Model
         self::TYPE_PROJECT,
         self::TYPE_CLIENT
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new LoginUser());
+    }
 
     /**
      * ホワイトリスト

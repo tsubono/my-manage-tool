@@ -15,6 +15,8 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->comment('ユーザーID');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->unsignedBigInteger('project_id')->comment('案件ID')->nullable();
             $table->foreign('project_id')->references('id')->on('projects')->onUpdate('cascade')->onDelete('cascade');
             $table->date('planned_deposit_date')->comment('入金予定日')->nullable();
@@ -24,6 +26,7 @@ class CreateSalesTable extends Migration
             $table->foreign('sale_status_id')->references('id')->on('sale_statuses')->onUpdate('cascade')->onDelete('cascade');
             $table->text('note')->nullable()->comment('備考');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

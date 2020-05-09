@@ -1,11 +1,18 @@
 html, body{
-  height: 100%;
+  height: auto;
+}
+
+body.modal-body-background {
+  #__nuxt {
+    width: 100%;
+    overflow-y: hidden;
+    position: fixed;
+  }
 }
 .wrapper {
   position: relative;
   min-height: 100%;
   height: auto !important;
-  height: 100%
 }
 
 .main-panel {
@@ -38,6 +45,10 @@ html, body{
   position: absolute;
   bottom: 0;
   width: 100%;
+}
+
+.navbar {
+  z-index: 0 !important;
 }
 
 .v-select {

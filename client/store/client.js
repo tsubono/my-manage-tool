@@ -23,15 +23,7 @@ export const actions = {
       });
   },
   async store({ commit }, client) {
-    const config = {
-      headers: {
-        'content-type': 'multipart/form-data'
-      }
-    };
-    const formData = new FormData();
-    Object.keys(client).forEach(key => formData.append(key, client[key]));
-
-    return await this.$axios.$post('/clients', formData, config)
+    return await this.$axios.$post('/clients', client)
       .then((response) => {
         return true;
       })
@@ -39,6 +31,7 @@ export const actions = {
         const response = { isError: true };
         if (error.response.status === 422) {
           response.errors = error.response.data;
+          response.errorMessage = '入力項目をご確認ください';
         }
         return response;
       });
@@ -52,6 +45,7 @@ export const actions = {
         const response = { isError: true };
         if (error.response.status === 422) {
           response.errors = error.response.data;
+          response.errorMessage = '入力項目をご確認ください';
         }
         return response;
       });

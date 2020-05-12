@@ -14,6 +14,7 @@
             class="col-md-10 col-md-offset-1 col-xs-12"
             label="名称"
             v-model="formStatuses[index].name"
+            :errors="errors['statuses.' + index + '.name'] !== undefined ? errors['statuses.' + index + '.name'] : []"
           >
           </fg-input>
           <color-picker-input
@@ -22,8 +23,9 @@
             label="色"
             v-model="formStatuses[index].color"
             :value="formStatuses[index].color"
+            :errors="errors[index] !== undefined && errors[index].color !== undefined ? errors[index].color : []"
           />
-          <button class="btn btn-danger btn-sm col-md-3 col-md-offset-9" @click="onClickDelete(formStatus)">
+          <button class="btn btn-danger btn-sm col-md-3 col-md-offset-9" @click="onClickDelete(formStatus, index)">
             削除
           </button>
         </div>
@@ -37,6 +39,11 @@
     </template>
     <!-- フッター -->
     <template slot="footer">
+      <template v-if="errors['statuses'] !== undefined">
+        <div v-for="(error, index) in errors['statuses']" :key="index" :value="error" class="text-danger error">
+          {{ error }}
+        </div>
+      </template>
       <button class="btn btn-default" @click="onClickClose">
         閉じる
       </button>
@@ -70,6 +77,7 @@
       return {
         formStatuses: cloneDeep(this.statuses),
         deletedStatusIds: [],
+        errors: [],
       }
     },
     methods: {
@@ -91,8 +99,17 @@
       },
       async onClickUpdate() {
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          await this.updateStatuses({ statuses: this.formStatuses, deletedStatusIds: this.deletedStatusIds });
-          this.$emit('close');
+          const response = await this.updateStatuses({ statuses: this.formStatuses, deletedStatusIds: this.deletedStatusIds });
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+            if (response.errors !== undefined) {
+              this.errors = response.errors;
+              debugger
+            }
+          } else {
+            this.$utility.notifySuccess(this.$notifications, '更新が完了しました');
+            this.$emit('close');
+          }
         }
       },
       ...mapActions('project', ['updateStatuses']),
@@ -106,5 +123,8 @@
       border-bottom: 1px solid #CCC5B9;
     }
     padding: 10px;
+  }
+  .error {
+    margin-bottom: 10px;
   }
 </style>

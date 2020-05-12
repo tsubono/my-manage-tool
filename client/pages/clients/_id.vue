@@ -60,9 +60,7 @@
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
           const response = await this.update(client);
           if (response.isError !== undefined) {
-            if (response.errorMessage !== undefined) {
-              this.$utility.notifyError(this.$notifications, this.errorMessage);
-            }
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
             if (response.errors !== undefined) {
               this.errors = response.errors;
             }

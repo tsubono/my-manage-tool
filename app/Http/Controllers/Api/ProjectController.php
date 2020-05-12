@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProjectRequest;
+use App\Http\Requests\ProjectStatusRequest;
 use App\Models\Project;
 use App\Models\ProjectStatus;
+use App\Repositories\Project\ProjectRepositoryInterface as ProjectRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ProjectController
@@ -16,24 +20,24 @@ use Illuminate\Support\Facades\DB;
 class ProjectController extends Controller
 {
     /**
-     * @var Project
-     */
-    private $project;
-
-    /**
      * @var ProjectStatus
      */
     private $projectStatus;
 
     /**
+     * @var ProjectRepository
+     */
+    private $projectRepository;
+
+    /**
      * ProjectController constructor.
      *
-     * @param Project $project
      * @param ProjectStatus $projectStatus
+     * @param ProjectRepository $projectRepository
      */
-    public function __construct(Project $project, ProjectStatus $projectStatus) {
-        $this->project = $project;
+    public function __construct(ProjectStatus $projectStatus, ProjectRepository $projectRepository) {
         $this->projectStatus = $projectStatus;
+        $this->projectRepository = $projectRepository;
     }
 
     /**
@@ -43,32 +47,73 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = $this->project->get();
+        // TODO: catch exception
+        $projects = $this->projectRepository->getAll();
+
         return response()->json(['projects' => $projects], 200, [], JSON_PRETTY_PRINT);
     }
 
     /**
-     * 新規作成 : TODO
+     * 詳細
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store()
+    public function show(int $id)
     {
-        //
+        // TODO: catch exception
+        $project = $this->projectRepository->getOne($id);
+
+        if (empty($project)) {
+            return response()->json([], 404, [], JSON_PRETTY_PRINT);
+        }
+        return response()->json($project, 200, [], JSON_PRETTY_PRINT);
     }
 
     /**
-     * 更新 : TODO
+     * 新規作成
+     *
+     * @param ProjectRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update()
+    public function store(ProjectRequest $request)
     {
-       //
+        $data = $request->all();
+        Log::info($data);
+        // TODO: catch exception
+        $project = $this->projectRepository->store($data);
+
+        return response()->json(['project' => $project], 200, [], JSON_PRETTY_PRINT);
     }
 
     /**
-     * 削除 : TODO
+     * 更新
+     *
+     * @param ProjectRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy()
+    public function update(ProjectRequest $request, int $id)
     {
-       //
+        $data = $request->all();
+        // TODO: catch exception
+        $project = $this->projectRepository->update($id, $data);
+
+        return response()->json(['project' => $project], 200, [], JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * 削除
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(int $id)
+    {
+        // TODO: catch exception
+        $this->projectRepository->destroy($id);
+
+        return response()->noContent();
     }
 
     /**
@@ -78,6 +123,7 @@ class ProjectController extends Controller
      */
     public function getStatuses()
     {
+        // TODO: catch exception
         $statuses = $this->projectStatus->get();
         return response()->json($statuses, 200, [], JSON_PRETTY_PRINT);
     }
@@ -86,42 +132,23 @@ class ProjectController extends Controller
     /**
      * ステータスを更新する
      *
-     * @param Request $request
+     * @param ProjectStatusRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateStatuses(Request $request)
+    public function updateStatuses(ProjectStatusRequest $request)
     {
-        DB::beginTransaction();
         try {
-            $statuses = $request->get('statuses');
-            $deleted_ids = $request->get('deleted_ids', []);
-            foreach ($statuses as $status) {
-                // ログイン中のユーザーを設定
-                $status['user_id'] = auth()->user()->id;
-                // idがnullの場合は新規登録
-                if (is_null($status['id'])) {
-                    $this->projectStatus->create($status);
-                // idが入っている場合は更新
-                } else {
-                    $targetStatus = $this->projectStatus->find($status['id']);
-                    $targetStatus->update($status);
-                }
-            }
-            // 削除するidがあれば削除処理
-            foreach ($deleted_ids as $deleted_id) {
-                $this->projectStatus->findOrFail($deleted_id)->delete();
-            }
+            $statuses = $this->projectRepository->updateStatuses(
+                $request->get('statuses'),
+                $request->get('deleted_ids', [])
+            );
+            return response()->json(['status' => 'OK', 'statuses' => $statuses], 200, [], JSON_PRETTY_PRINT);
 
-            $response = ['status' => 'OK', 'statuses' => $this->projectStatus->get()];
-
-            DB::commit();
         } catch (\Exception $e) {
-            DB::rollback();
             $response['status'] = 'NG';
             $response['message'] = $e->getMessage();
-            return response()->json($response, 422, [], JSON_PRETTY_PRINT);
-        }
 
-        return response()->json($response, 200, [], JSON_PRETTY_PRINT);
+            return response()->json(['status' => 'NG', 'errorMessage' => $e->getMessage()], 500, [], JSON_PRETTY_PRINT);
+        }
     }
 }

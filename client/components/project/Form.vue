@@ -12,13 +12,18 @@
         <div class="col-md-12">
           <div class="form-group col-md-10 col-xs-12">
             <multiselect
-              v-model="form.client"
+              v-model="project.client"
               :options="clientOptions"
               label="name"
               track-by="id"
               placeholder="取引先"
+              @input="option => form.client_id = (option !== null ? option.id : null)"
             >
             </multiselect>
+            <!-- TODO: componentで纏めたい -->
+            <div v-for="(error, index) in errors.client_id" :key="index" :value="error" class="text-danger error">
+              {{ error }}
+            </div>
           </div>
           <div class="form-group col-md-7 col-xs-12">
             <multiselect
@@ -26,8 +31,14 @@
               :options="$utility.getStatusOptions(statuses)"
               label="name"
               track-by="id"
-              placeholder="ステータス">
+              placeholder="ステータス"
+              @input="option => form.status_id = (option !== null ? option.id : null)"
+            >
             </multiselect>
+            <!-- TODO: componentで纏めたい -->
+            <div v-for="(error, index) in errors.status_id" :key="index" :value="error" class="text-danger error">
+              {{ error }}
+            </div>
           </div>
           <div class="form-group col-md-2 col-md-offset-1 col-xs-12">
             <button class="btn btn-success btn-wd" @click="toggleStatusModal">
@@ -39,6 +50,7 @@
             class="col-md-10 col-xs-12"
             label="名前"
             v-model="form.name"
+            :errors="errors.name"
           >
           </fg-input>
           <div class="form-group col-md-10 col-xs-12">
@@ -46,19 +58,25 @@
             <textarea
               rows="5"
               class="form-control border-input"
-              v-model="form.content"></textarea>
+              v-model="form.content"
+              :errors="errors.content"
+            ></textarea>
           </div>
           <fg-input
             type="text"
             class="col-md-10 col-xs-12"
             label="開始日"
-            v-model="form.start_date">
+            v-model="form.start_date"
+            :errors="errors.start_date"
+          >
           </fg-input>
           <fg-input
             type="text"
             class="col-md-10 col-xs-12"
             label="納期"
-            v-model="form.limit_date">
+            v-model="form.limit_date"
+            :errors="errors.limit_date"
+          >
           </fg-input>
           <div class="form-group col-md-10 col-xs-12">
             <multiselect
@@ -121,7 +139,9 @@
           start_date: null,
           limit_date: null,
           status_id: null,
+          client: [],
           labels: [],
+          status: [],
         })
       },
       clientOptions: {
@@ -136,6 +156,10 @@
         type: Array,
         'default': () => []
       },
+      errors: {
+        type: Object,
+        'default': () => {}
+      },
     },
     data() {
       return {
@@ -148,7 +172,7 @@
         this.isShowStatusModal = !this.isShowStatusModal;
       },
       submit() {
-        this.$emit('submit', this.project)
+        this.$emit('submit', this.form)
       },
       addLabel: function(newLabel) {
         const label = {

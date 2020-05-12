@@ -9,6 +9,7 @@
           :project="project"
           :labelOptions="labels"
           @submit="submit"
+          :errors="errors"
         >
         </project-form>
         <!-- /project form -->
@@ -18,7 +19,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   import cloneDeep from 'lodash.clonedeep'
   import projectForm from '~/components/project/Form.vue'
 
@@ -30,6 +31,11 @@
     head() {
       return {
         title: '案件情報',
+      }
+    },
+    data() {
+      return {
+        errors: {},
       }
     },
     async fetch ({ store }) {
@@ -56,9 +62,18 @@
       },
     },
     methods: {
-      submit (data) {
+      ...mapActions('project', ['update']),
+      async submit (project) {
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          // TODO: 更新APIに飛ばす！
+          const response = await this.update(project);
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+            if (response.errors !== undefined) {
+              this.errors = response.errors;
+            }
+          } else {
+            this.$router.push({ name: 'projects' });
+          }
         }
       },
     }

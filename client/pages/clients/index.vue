@@ -92,9 +92,7 @@
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
           const response = await this.destroy(id);
           if (response.isError !== undefined) {
-            if (response.errorMessage !== undefined) {
-              this.$utility.notifyError(this.$notifications, this.errorMessage);
-            }
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
           } else {
             this.$utility.notifySuccess(this.$notifications, '削除が完了しました');
           }

@@ -36,11 +36,10 @@ Route::group([
     'middleware' => 'auth:api',
     'namespace' => 'Api'
 ], function () {
-    Route::resource('clients', 'ClientController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
-    Route::resource('products', 'ProductController', ['only' => ['index', 'show']]);
+    Route::resource('clients', 'ClientController');
     Route::get('projects/statuses', 'ProjectController@getStatuses');
     Route::post('projects/statuses', 'ProjectController@updateStatuses');
-    Route::resource('projects', 'ProjectController', ['only' => ['index', 'show']]);
+    Route::resource('projects', 'ProjectController');
     Route::get('labels/project', 'LabelController@getProjectLabels');
     Route::resource('labels', 'LabelController', ['only' => ['index']]);
     Route::resource('memos', 'MemoController', ['only' => ['index']]);

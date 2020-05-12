@@ -19,6 +19,9 @@ class Client extends Model
     {
         parent::boot();
         static::addGlobalScope(new LoginUser());
+        static::creating(function (Model $model) {
+            $model->user_id = auth()->id();
+        });
     }
 
     /**
@@ -26,7 +29,7 @@ class Client extends Model
      *
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $guarded = ['id', 'labels', 'need_upload_icon_file'];
 
     /**
      * 日付へキャスト
@@ -47,6 +50,8 @@ class Client extends Model
         'labels',
     ];
 
+    protected $hidden = ['pivot'];
+
     /**
      * ラベル一覧情報を取得する
      *
@@ -55,6 +60,7 @@ class Client extends Model
     public function getLabelsAttribute()
     {
         return  $this->labels()
+            ->withPivot(['label_id'])
             ->getResults()
             ->makeHidden(['projects']);
     }

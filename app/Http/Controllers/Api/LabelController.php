@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Label;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class LabelController
@@ -39,7 +40,7 @@ class LabelController extends Controller
         // clientのラベル
         $clientLabels = [];
 
-        $labels = $this->label->get();
+        $labels = $this->label::select(['id', 'name'])->get();
         // typeに応じて振り分け
         foreach ($labels as $label) {
             if ($label['type'] === Label::TYPE_PROJECT) {

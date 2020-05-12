@@ -36,7 +36,7 @@ Route::group([
     'middleware' => 'auth:api',
     'namespace' => 'Api'
 ], function () {
-    Route::resource('clients', 'ClientController', ['only' => ['index', 'show']]);
+    Route::resource('clients', 'ClientController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
     Route::resource('products', 'ProductController', ['only' => ['index', 'show']]);
     Route::get('projects/statuses', 'ProjectController@getStatuses');
     Route::post('projects/statuses', 'ProjectController@updateStatuses');
@@ -49,4 +49,5 @@ Route::group([
     Route::get('sales/year/{year}', 'SaleController@getSalesByYear');
     Route::get('sales/month/{year}/{month}', 'SaleController@getSalesByMonth');
     Route::get('sales/statuses', 'SaleController@getStatuses');
+    Route::post('file/upload', 'FileController@upload');
 });

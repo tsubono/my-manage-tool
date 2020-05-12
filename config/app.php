@@ -55,6 +55,7 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL', null),
+    's3_path' => env('S3_PATH', 'https://my-manage-tool.s3-ap-northeast-1.amazonaws.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -176,6 +177,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        App\Providers\RepositoryServiceProvider::class,
     ],
 
     /*

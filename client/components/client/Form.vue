@@ -14,16 +14,14 @@
           <img
             :src="$utility.getImageUrl(form.icon_path)"
             class="round-img big"
-            v-if="form.icon_path !== null"
           >
-          <img
-            :src="$utility.getImageUrl()"
-            class="round-img big"
-            v-else
+          <file-uploader
+            @on-change-file="onChangeFile"
           >
-          <a class="edit-icon" @click="editIcon">
-            <span class="ti-pencil"></span>
-          </a>
+            <a class="edit-icon" slot="button">
+              <span class="ti-pencil"></span>
+            </a>
+          </file-uploader>
         </div>
         <!-- /.icon-area -->
         <div class="col-md-7 col-xs-12">
@@ -32,6 +30,7 @@
             class="col-md-8 col-xs-12"
             label="名前"
             v-model="form.name"
+            :errors="errors.name"
           >
           </fg-input>
           <fg-input
@@ -39,6 +38,7 @@
             class="col-md-8 col-xs-12"
             label="住所"
             v-model="form.address"
+            :errors="errors.address"
           >
           </fg-input>
           <fg-input
@@ -46,6 +46,7 @@
             class="col-md-8 col-xs-12"
             label="url"
             v-model="form.url"
+            :errors="errors.url"
           >
           </fg-input>
         </div>
@@ -55,6 +56,7 @@
             rows="5"
             class="form-control border-input"
             v-model="form.note"
+            :errors="errors.note"
           >
           </textarea>
         </div>
@@ -80,7 +82,7 @@
         <button class="btn btn-default" @click="$router.push('/clients')">
           一覧に戻る
         </button>
-        <button class="btn btn-info btn-fill btn-wd" @click="submit">
+        <button class="btn btn-info btn-fill btn-wd" @click="onClickSubmit">
           {{ client.id === null ? "登録する" : "更新する" }}
         </button>
       </div>
@@ -91,15 +93,19 @@
 </template>
 
 <script>
+  import FileUploader from '~/components/common/file/uploader'
+
   export default {
     layout: "dashboard",
+    components: {
+      FileUploader,
+    },
     props: {
       client: {
         type: Object,
         'default': () => ({
           id: null,
           name: null,
-          postal_code: null,
           address: null,
           url: null,
           note: null,
@@ -109,19 +115,29 @@
       labelOptions: {
         type: Array,
         'default': () => []
-      }
+      },
+      errors: {
+        type: Object,
+        'default': () => {}
+      },
     },
     data() {
       return {
-        form: this.client,
+        form: {
+          id: this.client.id,
+          name: this.client.name,
+          address: this.client.address,
+          url: this.client.url,
+          note: this.client.note,
+          labels: this.client.labels,
+          icon_path: this.client.icon_path,
+        },
+        need_upload_icon_path: null,
       }
     },
     methods: {
-      submit() {
-        this.$emit('submit', this.client)
-      },
-      editIcon() {
-        this.$emit('editIcon')
+      onClickSubmit() {
+        this.$emit('submit', this.form)
       },
       addLabel: function (newLabel) {
         const label = {
@@ -130,6 +146,9 @@
         };
         this.labelOptions.push(label);
         this.form.labels.push(label);
+      },
+      onChangeFile(filePath) {
+        this.form.icon_path = filePath
       },
     }
   }
@@ -147,7 +166,7 @@
       cursor: pointer;
       font-size: 20px;
       border-radius: 50%;
-      background: #ABB9BF;
+      background: #41B883;
       padding: 10px;
       color: #fff;
 
@@ -159,5 +178,9 @@
 
   .actions {
     margin: 15px auto;
+  }
+
+  label.input-file-label > input {
+    display: none;
   }
 </style>

@@ -23,6 +23,9 @@ class Label extends Model
     {
         parent::boot();
         static::addGlobalScope(new LoginUser());
+        static::creating(function (Model $model) {
+            $model->user_id = auth()->id();
+        });
     }
 
     /**
@@ -39,8 +42,27 @@ class Label extends Model
      */
     public $timestamps = false;
 
+    protected $hidden = ['pivot'];
+
+    /**
+     * 案件にひもづくラベルに絞るScope
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeProject($query)
     {
         return $query->where('type', self::TYPE_PROJECT);
+    }
+
+    /**
+     * 取引先にひもづくラベルに絞るScope
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeClient($query)
+    {
+        return $query->where('type', self::TYPE_CLIENT);
     }
 }

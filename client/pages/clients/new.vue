@@ -5,8 +5,8 @@
         <!-- client form -->
         <client-form
           @submit="submit"
-          @editIcon="editIcon"
           :labelOptions="labels"
+          :errors="errors"
         >
         </client-form>
         <!-- /client form -->
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   import cloneDeep from 'lodash.clonedeep'
   import clientForm from '~/components/client/Form.vue'
 
@@ -30,6 +30,11 @@
         title: '取引先情報登録',
       }
     },
+    data() {
+      return {
+        errors: {},
+      }
+    },
     async fetch ({ store }) {
       await store.dispatch('label/fetch');
     },
@@ -40,14 +45,20 @@
       },
     },
     methods: {
-      submit (data) {
+      ...mapActions('client', ['store']),
+      async submit (client) {
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          // TODO: 登録APIに飛ばす！
-        }
-      },
-      editIcon () {
-        if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          // TODO: ファイル選択表示
+          const response = await this.store(client);
+          if (response.isError !== undefined) {
+            if (response.errorMessage !== undefined) {
+              this.$utility.notifyError(this.$notifications, this.errorMessage);
+            }
+            if (response.errors !== undefined) {
+              this.errors = response.errors;
+            }
+          } else {
+            this.$router.push({ name: 'clients' });
+          }
         }
       },
     }

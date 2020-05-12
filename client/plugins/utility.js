@@ -21,8 +21,8 @@ class Utility {
         {
           message: '<h4>Sorry...</h4><p>編集権限がありません</p>',
           icon: 'ti-face-sad',
-          horizontalAlign: 'center',
-          verticalAlign: 'top',
+          horizontalAlign: 'right',
+          verticalAlign: 'bottom',
           type: 'danger',
         });
       return false;
@@ -80,7 +80,41 @@ class Utility {
    * @returns {string}
    */
   getImageUrl = (path) => {
-    return process.env.APP_URL + "/" + (path ? path : 'img/icon-no-image.png');
+    return path ? path : 'https://my-manage-tool.s3-ap-northeast-1.amazonaws.com/files/common/img/icon-no-image.png';
+  };
+
+  /**
+   * エラーを表示する
+   *
+   * @param notifications
+   * @param message
+   */
+  notifyError = (notifications, message = null) => {
+    notifications.notify(
+      {
+        message: `<h4>Error</h4><p>${message !== null ? message : 'システムエラーが発生しました'}</p>`,
+        icon: 'ti-bolt-alt',
+        horizontalAlign: 'right',
+        verticalAlign: 'bottom',
+        type: 'warning',
+      });
+  };
+
+  /**
+   * 成功メッセージを表示する
+   *
+   * @param notifications
+   * @param message
+   */
+  notifySuccess = (notifications, message = null) => {
+    notifications.notify(
+      {
+        message: `<h4>Success</h4><p>${message !== null ? message : '処理が完了しました'}</p>`,
+        icon: 'ti-face-smile',
+        horizontalAlign: 'right',
+        verticalAlign: 'bottom',
+        type: 'success',
+      });
   }
 }
 

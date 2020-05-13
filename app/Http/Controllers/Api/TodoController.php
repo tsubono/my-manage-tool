@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Todo;
+use App\Http\Requests\TodoRequest;
+use App\Repositories\Todo\TodoRepositoryInterface as TodoRepository;
 
 /**
  * Class TodoController
@@ -13,17 +14,17 @@ use App\Models\Todo;
 class TodoController extends Controller
 {
     /**
-     * @var Todo
+     * @var TodoRepository
      */
-    private $todo;
+    private $todoRepository;
 
     /**
      * LabelController constructor.
      *
-     * @param Todo $todo
+     * @param TodoRepository $todoRepository
      */
-    public function __construct(Todo $todo) {
-        $this->todo = $todo;
+    public function __construct(TodoRepository $todoRepository) {
+        $this->todoRepository = $todoRepository;
     }
 
     /**
@@ -33,7 +34,66 @@ class TodoController extends Controller
      */
     public function index()
     {
-        $todos = $this->todo->query()->orderBy('sort')->get()->toArray();
+        $todos = $this->todoRepository->getAll();
+
         return response()->json(['todos' => $todos], 200, [], JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * 詳細
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(int $id)
+    {
+        $todo = $this->todoRepository->getOne($id);
+
+        if (empty($todo)) {
+            return response()->json([], 404, [], JSON_PRETTY_PRINT);
+        }
+        return response()->json($todo, 200, [], JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * 新規作成
+     *
+     * @param TodoRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(TodoRequest $request)
+    {
+        $data = $request->all();
+        $todo = $this->todoRepository->store($data);
+
+        return response()->json(['todo' => $todo], 200, [], JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * 更新
+     *
+     * @param TodoRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(TodoRequest $request, int $id)
+    {
+        $data = $request->all();
+        $todo = $this->todoRepository->update($id, $data);
+
+        return response()->json(['todo' => $todo], 200, [], JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * 削除
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(int $id)
+    {
+        $this->todoRepository->destroy($id);
+
+        return response()->noContent();
     }
 }

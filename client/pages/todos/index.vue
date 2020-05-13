@@ -10,10 +10,9 @@
               </button>
             </div>
             <!-- /.add-button -->
-            <!-- todo list -->
+            <!-- list -->
             <div class="list">
               <div class="row item" v-for="(item, index) in todos" :key="item.title">
-
                 <!-- 編集中の場合 -->
                 <template v-if="isEdit && form.id === item.id">
                   <div class="title-input col-md-7 col-xs-12">
@@ -21,19 +20,20 @@
                       type="text"
                       v-model="form.title"
                       placeholder="タイトル"
+                      :errors="errors[item.id] !== undefined ? errors[item.id].title : null"
                     ></fg-input>
                   </div>
                   <div class="limit-input col-md-3 col-xs-9 text-right">
                     <Datetime
                       v-model="form.limit_datetime"
                       :minute-interval="15"
-                      :format="'YYYY-MM-DD HH:mm'"
+                      :format="'YYYY-MM-DD HH:mm:ss'"
                       :overlay="true"
                     ></Datetime>
                   </div>
                   <div class="actions col-md-2 col-xs-12 text-right">
-                    <a class="update-btn" @click="onClickUpdate(item.id)"><span class="ti-arrow-circle-down"></span></a>
-                    <button class="btn btn-danger btn-sm minus-btn" @click="onClickDelete">
+                    <a class="update-btn" @click="onClickUpdate"><span class="ti-arrow-circle-down"></span></a>
+                    <button class="btn btn-danger btn-sm minus-btn" @click="onClickDelete(item.id)">
                       <span class="ti-minus"></span>
                     </button>
                   </div>
@@ -52,7 +52,7 @@
                   </div>
                   <div class="actions col-md-2 col-xs-12 text-right">
                     <a class="edit-btn" @click="onClickEdit(item)"><span class="ti-pencil-alt"></span></a>
-                    <button class="btn btn-danger btn-sm minus-btn" @click="onClickDelete">
+                    <button class="btn btn-danger btn-sm minus-btn" @click="onClickDelete(item.id)">
                       <span class="ti-minus"></span>
                     </button>
                   </div>
@@ -67,23 +67,36 @@
                     type="text"
                     v-model="item.title"
                     placeholder="タイトル"
+                    :errors="errors['new-' + index] !== undefined ? errors['new-' + index].title : null"
                   ></fg-input>
                 </div>
                 <div class="limit-input col-md-3 col-xs-9 text-right">
                   <Datetime
                     v-model="item.limit_datetime"
                     :minute-interval="15"
-                    :format="'YYYY-MM-DD HH:mm'"
+                    :format="'YYYY-MM-DD HH:mm:ss'"
                     :overlay="true"
                   ></Datetime>
+                  <template v-if="errors['new-' + index] !== undefined">
+                    <div v-for="(error, errorIndex) in errors['new-' + index].limit_datetime" :key="errorIndex" :value="error" class="text-danger error">
+                      {{ error }}
+                    </div>
+                  </template>
                 </div>
                 <div class="actions col-md-2 col-xs-12 text-right">
-                  <a class="update-btn" @click="onClickStore(item)"><span class="ti-arrow-circle-down"></span></a>
+                  <a class="update-btn" @click="onClickStore(index, item)"><span class="ti-arrow-circle-down"></span></a>
+                  <button class="btn btn-danger btn-sm minus-btn" @click="onClickDeleteNewTodos(index)">
+                    <span class="ti-minus"></span>
+                  </button>
                 </div>
               </div>
               <!-- /追加されたレコード -->
+
+              <div v-if="todos.length === 0 && newTodos.length === 0">
+                データがありません
+              </div>
             </div>
-            <!-- /todo list -->
+            <!-- / list -->
           </div>
         </div>
       </div>
@@ -91,7 +104,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   import Datetime from 'vue-ctk-date-time-picker'
   import '@/node_modules/vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css'
 
@@ -117,13 +130,16 @@
         },
         isEdit: false,
         newTodos: [],
+        errors: [],
       }
     },
     computed: {
       ...mapState('todo', ['todos']),
     },
     methods: {
+      ...mapActions('todo', ['store', 'update', 'destroy']),
       onClickEdit(item) {
+        this.errors[this.form.id] = undefined;
         this.isEdit = true;
         this.form.id = item.id;
         this.form.title = item.title;
@@ -136,25 +152,52 @@
           limit_datetime: null,
         })
       },
-      onClickStore() {
+      onClickDeleteNewTodos(index) {
+        this.newTodos.splice(index, 1);
+      },
+      async onClickStore(index, item) {
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          // TODO: 登録 APIに飛ばす！
+          const response = await this.store(item);
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+            if (response.errors !== undefined) {
+              this.$set(this.errors, 'new-' + index, response.errors);
+            }
+          } else {
+            this.errors['new-' + index] = undefined;
+            this.$utility.notifySuccess(this.$notifications, '登録が完了しました');
+            this.newTodos.splice(index, 1);
+          }
         }
       },
-      onClickUpdate() {
+      async onClickUpdate() {
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          // TODO: 更新APIに飛ばす！
+          const response = await this.update(this.form);
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+            if (response.errors !== undefined) {
+              this.$set(this.errors, this.form.id, response.errors);
+            }
+          } else {
+            this.errors[this.form.id] = undefined;
+            this.$utility.notifySuccess(this.$notifications, '更新が完了しました');
+            this.isEdit = false;
+            this.form = {
+              id: null,
+              title: null,
+              limit_datetime: null,
+            };
+          }
         }
-        this.isEdit = false;
-        this.form = {
-          id: null,
-          title: null,
-          limit_datetime: null,
-        };
       },
-      onClickDelete() {
+      async onClickDelete(id) {
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          // TODO: 削除APIに飛ばす！
+          const response = await this.destroy(id);
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+          } else {
+            this.$utility.notifySuccess(this.$notifications, '削除が完了しました');
+          }
         }
       },
     }
@@ -166,6 +209,7 @@
     .list {
       margin: 10px 30px;
       padding: 0 15px 30px 15px;
+      min-height: 200px;
 
       .item {
         width: 90%;

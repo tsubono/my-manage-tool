@@ -43,7 +43,7 @@ export const actions = {
       })
       .catch((error) => {
         const response = { isError: true };
-        if (error.response.status === 422) {
+        if (error.response !== undefined && error.response.status === 422) {
           response.errors = error.response.data;
           response.errorMessage = '入力項目をご確認ください';
         }
@@ -57,7 +57,7 @@ export const actions = {
       })
       .catch((error) => {
         const response = { isError: true };
-        if (error.response.status === 422) {
+        if (error.response !== undefined && error.response.status === 422) {
           response.errors = error.response.data;
           response.errorMessage = '入力項目をご確認ください';
         }
@@ -84,7 +84,7 @@ export const actions = {
       })
       .catch((error) => {
         const response = { isError: true };
-        if (error.response.status === 422) {
+        if (error.response !== undefined && error.response.status === 422) {
           response.errors = error.response.data;
           response.errorMessage = '入力項目をご確認ください';
         }

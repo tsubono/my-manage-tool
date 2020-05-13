@@ -61,19 +61,16 @@
           </textarea>
         </div>
         <div class="form-group col-md-10 col-xs-12">
-          <multiselect
-            v-model="form.labels"
-            :options="labelOptions"
+          <fg-multi-select
+            :labelOptions="labelOptions"
             open-direction="top"
-            multiple
-            taggable
-            label="name"
+            select-label="name"
             track-by="id"
-            @tag="addLabel"
             tag-placeholder="新しいラベルを作成"
-            placeholder="ラベル"
+            @add-label="addLabel"
+            v-model="form.labels"
           >
-          </multiselect>
+          </fg-multi-select>
         </div>
       </div>
       <!-- /form items -->
@@ -117,8 +114,8 @@
         'default': () => []
       },
       errors: {
-        type: Object,
-        'default': () => {}
+        type: Array,
+        'default': () => []
       },
     },
     data() {

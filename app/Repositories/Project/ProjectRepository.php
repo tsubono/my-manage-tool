@@ -184,7 +184,7 @@ class ProjectRepository implements ProjectRepositoryInterface
                 }
                 $label_ids[] = $label->id;
             }
-            $project->labels()->sync($label_ids);
         }
+        $project->labels()->sync($label_ids);
     }
 }

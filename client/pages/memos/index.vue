@@ -78,7 +78,7 @@
   #memo-list {
     .list {
       margin: 10px auto;
-      min-height: 450px;
+      min-height: 200px;
 
       .item {
         height: 100px;

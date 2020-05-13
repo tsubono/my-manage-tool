@@ -137,7 +137,7 @@ class ClientRepository implements ClientRepositoryInterface
                 }
                 $label_ids[] = $label->id;
             }
-            $client->labels()->sync($label_ids);
         }
+        $client->labels()->sync($label_ids);
     }
 }

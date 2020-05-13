@@ -44,8 +44,13 @@
                       <nuxt-link :to="{ name:'projects-id', params: { id: item.id } }">
                         <span class="ti-pencil-alt"></span>
                       </nuxt-link>
-                      <span class="ti-trash text-danger" @click="destroy"></span>
+                      <span class="ti-trash text-danger" @click="onClickDelete(item.id)"></span>
                     </div>
+                  </td>
+                </tr>
+                <tr v-if="projects.length === 0">
+                  <td :colspan="table.columns.length" class="text-center">
+                    データがありません
                   </td>
                 </tr>
                 <!-- /project row -->
@@ -60,7 +65,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
 
   export default {
     layout: 'default',
@@ -84,9 +89,15 @@
       }
     },
     methods: {
-      destroy() {
+      ...mapActions('project', ['destroy']),
+      async onClickDelete(id) {
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          // TODO: 削除APIに飛ばす！
+          const response = await this.destroy(id);
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+          } else {
+            this.$utility.notifySuccess(this.$notifications, '削除が完了しました');
+          }
         }
       },
     }

@@ -32,7 +32,7 @@
     },
     data() {
       return {
-        errors: {},
+        errors: [],
       }
     },
     async fetch ({ store }) {

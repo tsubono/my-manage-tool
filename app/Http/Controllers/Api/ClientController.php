@@ -34,7 +34,6 @@ class ClientController extends Controller
      */
     public function index()
     {
-        // TODO: catch exception
         $clients = $this->clientRepository->getAll();
 
         return response()->json(['clients' => $clients], 200, [], JSON_PRETTY_PRINT);
@@ -48,7 +47,6 @@ class ClientController extends Controller
      */
     public function show(int $id)
     {
-        // TODO: catch exception
         $client = $this->clientRepository->getOne($id);
 
         if (empty($client)) {
@@ -66,7 +64,6 @@ class ClientController extends Controller
     public function store(ClientRequest $request)
     {
         $data = $request->all();
-        // TODO: catch exception
         $client = $this->clientRepository->store($data);
 
         return response()->json(['client' => $client], 200, [], JSON_PRETTY_PRINT);
@@ -82,7 +79,6 @@ class ClientController extends Controller
     public function update(ClientRequest $request, int $id)
     {
         $data = $request->all();
-        // TODO: catch exception
         $client = $this->clientRepository->update($id, $data);
 
         return response()->json(['client' => $client], 200, [], JSON_PRETTY_PRINT);
@@ -96,7 +92,6 @@ class ClientController extends Controller
      */
     public function destroy(int $id)
     {
-        // TODO: catch exception
         $this->clientRepository->destroy($id);
 
         return response()->noContent();

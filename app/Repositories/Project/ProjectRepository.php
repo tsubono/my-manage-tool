@@ -44,7 +44,7 @@ class ProjectRepository implements ProjectRepositoryInterface
      */
     public function getAll(): Collection
     {
-        return $this->project->get();
+        return $this->project->orderBy('created_at', 'desc')->get();
     }
 
     /**
@@ -63,15 +63,25 @@ class ProjectRepository implements ProjectRepositoryInterface
      *
      * @param array $data
      * @return Project
+     * @throws \Exception
      */
     public function store(array $data): Project
     {
-        // 案件登録
-        $project = $this->project->create($data);
-        // ラベル更新
-        $this->updateLabels($project, $data);
+        DB::beginTransaction();
+        try {
+            // 案件登録
+            $project = $this->project->create($data);
+            // ラベル更新
+            $this->updateLabels($project, $data);
 
-        return $project;
+            DB::commit();
+
+            return $project;
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            throw new \Exception($e);
+        }
     }
 
     /**
@@ -80,16 +90,27 @@ class ProjectRepository implements ProjectRepositoryInterface
      * @param int $id
      * @param array $data
      * @return Project
+     * @throws \Exception
      */
-    public function update($id, array $data): Project
+    public function update(int $id, array $data): Project
     {
-        $project = $this->project->findOrFail($id);
-        // 案件更新
-        $project->update($data);
-        // ラベル更新
-        $this->updateLabels($project, $data);
+        DB::beginTransaction();
+        try {
+            $project = $this->project->findOrFail($id);
+            // 案件更新
+            $project->update($data);
+            // ラベル更新
+            $this->updateLabels($project, $data);
 
-        return $project;
+            DB::commit();
+
+            return $project;
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            throw new \Exception($e);
+        }
     }
 
     /**

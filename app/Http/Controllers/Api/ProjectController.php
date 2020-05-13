@@ -5,12 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
 use App\Http\Requests\ProjectStatusRequest;
-use App\Models\Project;
 use App\Models\ProjectStatus;
 use App\Repositories\Project\ProjectRepositoryInterface as ProjectRepository;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class ProjectController
@@ -47,7 +43,6 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        // TODO: catch exception
         $projects = $this->projectRepository->getAll();
 
         return response()->json(['projects' => $projects], 200, [], JSON_PRETTY_PRINT);
@@ -61,7 +56,6 @@ class ProjectController extends Controller
      */
     public function show(int $id)
     {
-        // TODO: catch exception
         $project = $this->projectRepository->getOne($id);
 
         if (empty($project)) {
@@ -79,8 +73,6 @@ class ProjectController extends Controller
     public function store(ProjectRequest $request)
     {
         $data = $request->all();
-        Log::info($data);
-        // TODO: catch exception
         $project = $this->projectRepository->store($data);
 
         return response()->json(['project' => $project], 200, [], JSON_PRETTY_PRINT);
@@ -96,7 +88,6 @@ class ProjectController extends Controller
     public function update(ProjectRequest $request, int $id)
     {
         $data = $request->all();
-        // TODO: catch exception
         $project = $this->projectRepository->update($id, $data);
 
         return response()->json(['project' => $project], 200, [], JSON_PRETTY_PRINT);
@@ -110,7 +101,6 @@ class ProjectController extends Controller
      */
     public function destroy(int $id)
     {
-        // TODO: catch exception
         $this->projectRepository->destroy($id);
 
         return response()->noContent();
@@ -123,11 +113,9 @@ class ProjectController extends Controller
      */
     public function getStatuses()
     {
-        // TODO: catch exception
         $statuses = $this->projectStatus->get();
         return response()->json($statuses, 200, [], JSON_PRETTY_PRINT);
     }
-
 
     /**
      * ステータスを更新する
@@ -137,18 +125,10 @@ class ProjectController extends Controller
      */
     public function updateStatuses(ProjectStatusRequest $request)
     {
-        try {
-            $statuses = $this->projectRepository->updateStatuses(
-                $request->get('statuses'),
-                $request->get('deleted_ids', [])
-            );
-            return response()->json(['status' => 'OK', 'statuses' => $statuses], 200, [], JSON_PRETTY_PRINT);
-
-        } catch (\Exception $e) {
-            $response['status'] = 'NG';
-            $response['message'] = $e->getMessage();
-
-            return response()->json(['status' => 'NG', 'errorMessage' => $e->getMessage()], 500, [], JSON_PRETTY_PRINT);
-        }
+        $statuses = $this->projectRepository->updateStatuses(
+            $request->get('statuses'),
+            $request->get('deleted_ids', [])
+        );
+        return response()->json(['status' => 'OK', 'statuses' => $statuses], 200, [], JSON_PRETTY_PRINT);
     }
 }

@@ -40,7 +40,7 @@ class LabelController extends Controller
         // clientのラベル
         $clientLabels = [];
 
-        $labels = $this->label::select(['id', 'name'])->get();
+        $labels = $this->label::select(['id', 'name', 'type'])->get();
         // typeに応じて振り分け
         foreach ($labels as $label) {
             if ($label['type'] === Label::TYPE_PROJECT) {
@@ -49,6 +49,7 @@ class LabelController extends Controller
                 $clientLabels[] = $label;
             }
         }
+
         return response()->json(
             ['data' => compact('projectLabels', 'clientLabels')],
             200, [],

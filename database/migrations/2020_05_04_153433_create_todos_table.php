@@ -23,8 +23,8 @@ class CreateTodosTable extends Migration
             $table->dateTimeTz('limit_datetime')->comment('期限')->nullable();
             $table->boolean('status')->comment('完了ステータス')->default(false);
             $table->integer('sort')->comment('順番')->default(0);
-            $table->timestamps();
-            $table->softDeletes();
+            $table->timestampsTz();
+            $table->softDeletesTz();
         });
     }
 

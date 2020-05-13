@@ -22,11 +22,11 @@ class CreateSalesTable extends Migration
             $table->date('planned_deposit_date')->comment('入金予定日')->nullable();
             $table->date('deposit_date')->comment('入金日')->nullable();
             $table->integer('price')->comment('金額')->nullable();
-            $table->unsignedBigInteger('sale_status_id')->comment('売上ステータスID');
-            $table->foreign('sale_status_id')->references('id')->on('sale_statuses')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('sale_status_id')->comment('売上ステータスID')->nullable();
+            $table->foreign('sale_status_id')->references('id')->on('sale_statuses')->onUpdate('cascade')->onDelete('set null');
             $table->text('note')->nullable()->comment('備考');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->timestampsTz();
+            $table->softDeletesTz();
         });
     }
 

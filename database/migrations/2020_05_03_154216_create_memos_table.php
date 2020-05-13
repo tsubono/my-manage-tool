@@ -19,8 +19,8 @@ class CreateMemosTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->string('title')->comment('タイトル');
             $table->longText('content')->comment('内容');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->timestampsTz();
+            $table->softDeletesTz();
         });
     }
 

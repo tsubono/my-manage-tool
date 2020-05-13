@@ -24,8 +24,8 @@ class CreateClientsTable extends Migration
             $table->date('contract_date')->nullable()->comment('契約日');
             $table->string('icon_path')->nullable()->comment('アイコンパス');
             $table->boolean('status')->default(true)->comment('ステータス: 有効 / 無効');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->timestampsTz();
+            $table->softDeletesTz();
         });
     }
 

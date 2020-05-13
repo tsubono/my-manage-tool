@@ -38,6 +38,7 @@ class DummyDataSeeder extends Seeder
                 'name' => 'user1',
                 'email' => 'user1@user.com',
                 'password' => \Hash::make('password1'),
+                'icon_path' => 'https://my-manage-tool.s3-ap-northeast-1.amazonaws.com/files/common/img/header-icon.jpg',
                 'created_at' => $now,
                 'updated_at' => $now,
             ]

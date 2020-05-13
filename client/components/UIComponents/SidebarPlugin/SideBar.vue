@@ -5,19 +5,22 @@
     <div class="sidebar-wrapper">
       <div class="logo">
         <a href="#" class="simple-text">
-          <img src="/img/header-icon.jpg" class="round-img small">
-          {{title}}
+          <img
+            :src="$utility.getImageUrl(user.icon_path)"
+            class="round-img small icon-img">
+          {{ user.name }}
         </a>
       </div>
 
       <slot name="content"></slot>
       <ul :class="navClasses">
         <slot>
-          <sidebar-link v-for="(link,index) in sidebarLinks"
-                        :key="link.name + index"
-                        :to="link.path"
-                        @click="closeNavbar"
-                        :link="link">
+          <sidebar-link
+            v-for="(link,index) in sidebarLinks"
+            :key="link.name + index"
+            :to="link.path"
+            @click="closeNavbar"
+            :link="link">
             <i :class="link.icon"></i>
             <p>{{link.name}}</p>
           </sidebar-link>
@@ -38,15 +41,11 @@
     props: {
       title: {
         type: String,
-        default: '管理画面サンプル'
+        default: 'manage-tool'
       },
       type: {
         type: String,
         default: 'sidebar',
-        // validator: (value) => {
-        //   let acceptedValues = ['sidebar', 'navbar']
-        //   return acceptedValues.indexOf(value) !== -1
-        // }
       },
       backgroundColor: {
         type: String,
@@ -101,12 +100,8 @@
           return 'nav navbar-nav'
         }
       },
-      /**
-       * Styles to animate the arrow near the current active sidebar link
-       * @returns {{transform: string}}
-       */
-      arrowMovePx () {
-        return this.linkHeight * this.activeLinkIndex
+      user() {
+        return this.$auth.user;
       }
     },
     data () {
@@ -139,3 +134,9 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+  .icon-img {
+    margin-right: 10px;
+  }
+</style>

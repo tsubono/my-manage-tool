@@ -103,14 +103,35 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * ユーザー登録
+     *
+     * @param UserRequest $request
+     */
     public function register(UserRequest $request)
     {
-        $user = $request->all();
         User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
             'can_edit' => true,
         ]);
+    }
+
+    /**
+     * ユーザー更新
+     *
+     * @param UserRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(UserRequest $request, int $id)
+    {
+        $data = $request->all();
+        isset($data['password']) && $data['password'] = Hash::make($data['password']);
+        $user = User::find($id);
+        $user->update($data);
+
+        return response()->json(['user' => $user], 200, [], JSON_PRETTY_PRINT);
     }
 }

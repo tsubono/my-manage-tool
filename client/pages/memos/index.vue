@@ -5,7 +5,7 @@
           <div class="card">
             <!-- .add-button -->
             <div class="text-right add-button">
-              <button class="btn btn-primary" @click="showMemoModal(item, true)">
+              <button class="btn btn-primary" @click="showMemoModal()">
                 <span class="ti-plus"></span>
               </button>
             </div>
@@ -27,7 +27,7 @@
     <MemoModal
       v-if="isShowMemoModal"
       :item="showModalItem"
-      :isNew="isNew"
+      :is-new="isNew"
       @close="closeMemoModal()"
     />
   </div>
@@ -35,7 +35,13 @@
 
 <script>
   import { mapState } from 'vuex'
+  import cloneDeep from 'lodash.clonedeep'
   import MemoModal from '~/components/modal/MemoModal'
+  const clearItem = {
+    id: '',
+    title: '',
+    content: '',
+  };
 
   export default {
     layout: 'default',
@@ -56,19 +62,19 @@
     data() {
       return {
         isShowMemoModal: false,
-        showModalItem: [],
+        showModalItem: {},
         isNew: false,
       }
     },
     methods: {
-      showMemoModal(item, isNew = false) {
+      showMemoModal(item = null) {
         this.isShowMemoModal = true;
-        this.showModalItem = item;
-        this.isNew = isNew;
+        this.showModalItem = item !== null ? cloneDeep(item) : cloneDeep(clearItem);
+        this.isNew = item == null;
       },
       closeMemoModal() {
         this.isShowMemoModal = false;
-        this.showModalItem = {};
+        this.showModalItem = clearItem;
       },
     }
   }

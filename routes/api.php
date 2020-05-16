@@ -43,7 +43,7 @@ Route::group([
     Route::resource('projects', 'ProjectController');
     Route::get('labels/project', 'LabelController@getProjectLabels');
     Route::resource('labels', 'LabelController', ['only' => ['index']]);
-    Route::resource('memos', 'MemoController', ['only' => ['index']]);
+    Route::resource('memos', 'MemoController');
     Route::resource('todos', 'TodoController');
     Route::get('sales/client/{year}', 'SaleController@getSalesByClient');
     Route::get('sales/year/{year}', 'SaleController@getSalesByYear');

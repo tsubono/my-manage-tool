@@ -27,6 +27,11 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Todo\TodoRepositoryInterface::class,
             \App\Repositories\Todo\TodoRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Memo\MemoRepositoryInterface::class,
+            \App\Repositories\Memo\MemoRepository::class
+        );
     }
 
     /**

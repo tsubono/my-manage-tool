@@ -2,7 +2,12 @@
   <ModalWrapper @close="onClickClose()">
     <h3 slot="header" class="row">
       <!-- タイトル -->
-      <fg-input class="col-md-10 col-sm-10" v-model="form.title" placeholder="タイトル" v-if="isEdit"></fg-input>
+      <fg-input
+        class="col-md-10 col-sm-10"
+        v-model="form.title" placeholder="タイトル"
+        v-if="isEdit"
+        :errors="errors.title"
+      ></fg-input>
       <span class="col-md-10 col-sm-10" v-else>{{ item.title }}</span>
       <!-- /タイトル -->
       <!-- 切り替えボタン -->
@@ -18,7 +23,11 @@
     </h3>
     <template slot="body">
       <!-- コンテンツ -->
-      <MarkdownEditor v-if="isEdit" :modelProps="form.content" />
+      <MarkdownEditor
+        v-if="isEdit"
+        v-model="form.content"
+        :errors="errors.content"
+      />
       <div v-html="$md.render(item.content)" v-else></div>
       <!-- /コンテンツ -->
     </template>
@@ -27,8 +36,14 @@
       <button class="btn btn-default" @click="onClickClose">
         閉じる
       </button>
-      <button class="btn btn-primary" @click="onClickUpdate" v-if="isEdit">
+      <button class="btn btn-primary" @click="onClickStore" v-if="isNew">
+        登録
+      </button>
+      <button class="btn btn-primary" @click="onClickUpdate" v-else-if="isEdit">
         更新
+      </button>
+      <button class="btn btn-danger" @click="onClickDelete" v-if="!isNew">
+        削除
       </button>
     </template>
     <!-- /フッター -->
@@ -36,6 +51,7 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
   import ModalWrapper from '~/components/modal/ModalWrapper'
   import MarkdownEditor from '~/components/common/MarkdownEditor'
 
@@ -49,6 +65,7 @@
       item: {
         type: Object,
         default: () => ({
+            id: '',
             title: '',
             content: '',
           })
@@ -73,19 +90,55 @@
             isActive: this.isEdit,
           },
         ],
-        form: this.item
+        form: this.item,
+        errors: [],
       }
     },
     methods: {
+      ...mapActions('memo', ['store', 'update', 'destroy']),
       toggleEdit() {
         this.isEdit = !this.isEdit;
       },
       onClickClose() {
         this.$emit('close');
       },
-      onClickUpdate() {
+      async onClickStore() {
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          // TODO: 更新APIに飛ばす！
+          const response = await this.store(this.form);
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+            if (response.errors !== undefined) {
+              this.errors = response.errors;
+            }
+          } else {
+            this.$emit('close');
+          }
+        }
+      },
+      async onClickUpdate() {
+        if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
+          const response = await this.update(this.form);
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+            if (response.errors !== undefined) {
+              this.errors = response.errors;
+            }
+          } else {
+            this.$emit('close');
+          }
+        }
+      },
+      async onClickDelete() {
+        if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
+          const response = await this.destroy(this.form.id);
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+            if (response.errors !== undefined) {
+              this.errors = response.errors;
+            }
+          } else {
+            this.$emit('close');
+          }
         }
       },
     }

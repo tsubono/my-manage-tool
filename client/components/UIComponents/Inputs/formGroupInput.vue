@@ -35,5 +35,6 @@
 
   .error {
     padding-top: 5px;
+    font-size: 14px;
   }
 </style>

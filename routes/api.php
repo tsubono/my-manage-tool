@@ -45,9 +45,15 @@ Route::group([
     Route::resource('labels', 'LabelController', ['only' => ['index']]);
     Route::resource('memos', 'MemoController');
     Route::resource('todos', 'TodoController');
-    Route::get('sales/client/{year}', 'SaleController@getSalesByClient');
-    Route::get('sales/year/{year}', 'SaleController@getSalesByYear');
-    Route::get('sales/month/{year}/{month}', 'SaleController@getSalesByMonth');
-    Route::get('sales/statuses', 'SaleController@getStatuses');
+
+    Route::resource('sales', 'SaleController', ['only' => ['store', 'update', 'destroy']]);
+    Route::group(['prefix' => 'sales'], function() {
+        Route::get('client/{year}', 'SaleController@getSalesByClient');
+        Route::get('year/{year}', 'SaleController@getSalesByYear');
+        Route::get('month/{year}/{month}', 'SaleController@getSalesByMonth');
+        Route::get('statuses', 'SaleController@getStatuses');
+        Route::post('statuses', 'SaleController@updateStatuses');
+    });
+
     Route::post('file/upload', 'FileController@upload');
 });

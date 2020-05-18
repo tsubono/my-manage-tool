@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SaleRequest;
+use App\Http\Requests\SaleStatusRequest;
 use App\Models\Sale;
 use App\Models\SaleStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Repositories\Sale\SaleRepositoryInterface as SaleRepository;
+
 
 /**
  * Class SaleController
@@ -27,14 +31,20 @@ class SaleController extends Controller
     private $saleStatus;
 
     /**
+     * @var SaleRepository
+     */
+    private $saleRepository;
+
+    /**
      * ProjectController constructor.
      *
      * @param Sale $sale
      * @param SaleStatus $saleStatus
      */
-    public function __construct(Sale $sale, SaleStatus $saleStatus) {
+    public function __construct(Sale $sale, SaleStatus $saleStatus, SaleRepository $saleRepository) {
         $this->sale = $sale;
         $this->saleStatus = $saleStatus;
+        $this->saleRepository = $saleRepository;
     }
 
     /**
@@ -45,11 +55,7 @@ class SaleController extends Controller
      */
     public function getSalesByYear($year)
     {
-        $sales =
-            $this->sale->query()
-                ->whereYear('planned_deposit_date', '=', $year)
-                ->orderBy('planned_deposit_date')
-                ->get();
+        $sales = $this->saleRepository->getSalesByYear($year);
 
         return response()->json(['sales' => $sales], 200, [], JSON_PRETTY_PRINT);
     }
@@ -63,12 +69,7 @@ class SaleController extends Controller
      */
     public function getSalesByMonth($year, $month)
     {
-        $sales =
-            $this->sale->query()
-                ->whereYear('planned_deposit_date', '=', $year)
-                ->whereMonth('planned_deposit_date', '=', $month)
-                ->orderBy('planned_deposit_date')
-                ->get();
+        $sales = $this->saleRepository->getSalesByMonth($year, $month);
 
         return response()->json(['sales' => $sales], 200, [], JSON_PRETTY_PRINT);
     }
@@ -81,46 +82,67 @@ class SaleController extends Controller
      */
     public function getSalesByClient($year)
     {
-        $sales =
-            $this->sale->query()
-                ->whereYear('planned_deposit_date', '=', $year)
-                ->orderBy('planned_deposit_date')
-                ->get();
-
-        $salesByClient = [];
-        foreach ($sales as $sale) {
-            $client = $sale->project->client->name;
-            if (!isset($salesByClient[$client])) {
-                $salesByClient[$client] = 0;
-            }
-            $salesByClient[$client] += $sale->price;
-        }
+        $salesByClient = $this->saleRepository->getSalesByClient($year);
 
         return response()->json(['sales' => $salesByClient], 200, [], JSON_PRETTY_PRINT);
     }
 
     /**
-     * 新規作成 : TODO
+     * 詳細
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store()
+    public function show(int $id)
     {
-        //
+        $sale = $this->saleRepository->getOne($id);
+
+        if (empty($sale)) {
+            return response()->json([], 404, [], JSON_PRETTY_PRINT);
+        }
+        return response()->json($sale, 200, [], JSON_PRETTY_PRINT);
     }
 
     /**
-     * 更新 : TODO
+     * 新規作成
+     *
+     * @param SaleRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update()
+    public function store(SaleRequest $request)
     {
-       //
+        $data = $request->all();
+        $sale = $this->saleRepository->store($data);
+
+        return response()->json(['sale' => $sale], 200, [], JSON_PRETTY_PRINT);
     }
 
     /**
-     * 削除 : TODO
+     * 更新
+     *
+     * @param SaleRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy()
+    public function update(SaleRequest $request, int $id)
     {
-       //
+        $data = $request->all();
+        $sale = $this->saleRepository->update($id, $data);
+
+        return response()->json(['sale' => $sale], 200, [], JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * 削除
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(int $id)
+    {
+        $this->saleRepository->destroy($id);
+
+        return response()->noContent();
     }
 
     /**
@@ -130,7 +152,23 @@ class SaleController extends Controller
      */
     public function getStatuses()
     {
-        $statuses = $this->saleStatus->get();
+        $statuses = $this->saleRepository->getStatuses();
         return response()->json(['statuses' => $statuses], 200, [], JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * ステータスを更新する
+     *
+     * @param SaleStatusRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateStatuses(SaleStatusRequest $request)
+    {
+        $statuses = $this->saleRepository->updateStatuses(
+            $request->get('statuses'),
+            $request->get('deleted_ids', [])
+        );
+
+        return response()->json(['status' => 'OK', 'statuses' => $statuses], 200, [], JSON_PRETTY_PRINT);
     }
 }

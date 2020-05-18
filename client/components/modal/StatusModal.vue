@@ -58,8 +58,7 @@
 <script>
   import ModalWrapper from '~/components/modal/ModalWrapper'
   import cloneDeep from 'lodash.clonedeep'
-  import {Chrome} from 'vue-color'
-  import { mapActions } from 'vuex'
+  import { Chrome } from 'vue-color'
 
   export default {
     name: 'sale-modal',
@@ -98,21 +97,8 @@
         this.$emit('close');
       },
       async onClickUpdate() {
-        if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          const response = await this.updateStatuses({ statuses: this.formStatuses, deletedStatusIds: this.deletedStatusIds });
-          if (response.isError !== undefined) {
-            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
-            if (response.errors !== undefined) {
-              this.errors = response.errors;
-              debugger
-            }
-          } else {
-            this.$utility.notifySuccess(this.$notifications, '更新が完了しました');
-            this.$emit('close');
-          }
-        }
+        this.$emit('update', {formStatuses: this.formStatuses, deletedStatusIds: this.deletedStatusIds});
       },
-      ...mapActions('project', ['updateStatuses']),
     }
   }
 </script>

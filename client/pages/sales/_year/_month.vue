@@ -3,7 +3,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="card">
-            <div class="year-month col-md-4 col-xs-12 text-center">
+            <div class="year-month col-md-4  col-sm-12 col-xs-12 text-center">
               <nuxt-link
                 :to="{ name:'sales-year-month',
                   params: { year: beforeYear, month: beforeMonth } }">
@@ -16,16 +16,16 @@
                 <span class="ti-arrow-circle-right"></span>
               </nuxt-link>
             </div>
-            <div class="total-price col-md-4 col-xs-9">
+            <div class="total-price col-md-4 col-sm-7 col-xs-8">
               Total: <span>{{ totalPrice | price }}円</span>
             </div>
-            <div class="analysis col-md-2 col-xs-3">
+            <div class="analysis col-md-2 col-sm-4 col-xs-3">
               <nuxt-link :to="{ name:'sales-year-analysis', params: { year: $route.params.year } }">
                 <button class="btn btn-success">分析</button>
               </nuxt-link>
             </div>
             <!-- .add-button -->
-            <div class="text-right add-button col-md-2">
+            <div class="text-right add-button col-md-2 col-sm-1 col-xs-12">
               <button class="btn btn-primary" @click="onClickAdd()">
                 <span class="ti-plus"></span>
               </button>
@@ -62,7 +62,7 @@
                       <a @click="onClickEdit(item)">
                         <span class="ti-pencil-alt"></span>
                       </a>
-                      <a @click="destroy">
+                      <a @click="onClickDelete(item.id)">
                         <span class="ti-trash text-danger"></span>
                       </a>
                     </div>
@@ -76,19 +76,20 @@
           </div>
         </div>
       </div>
-    <SaleModal
+    <sale-modal
       v-if="isShowSaleModal"
-      :item="showModalItem"
+      :sale="showModalItem"
       :projectOptions="$utility.getProjectOptions(projects)"
-      :statusOptions="$utility.getStatusOptions(statuses)"
+      :statuses="statuses"
       @close="closeSaleModal()"
     />
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   import SaleModal from '~/components/modal/SaleModal'
+  import cloneDeep from 'lodash.clonedeep'
 
   export default {
     layout: 'default',
@@ -152,26 +153,27 @@
       }
     },
     methods: {
+      ...mapActions('sale', ['destroy']),
       onClickEdit(item) {
         this.isShowSaleModal = true;
-        this.showModalItem = item;
+        this.showModalItem = cloneDeep(item);
       },
       onClickAdd() {
         this.isShowSaleModal = true;
       },
-      onClickDelete() {
+      async onClickDelete(id) {
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          // TODO: 削除APIに飛ばす！
+          const response = await this.destroy(id);
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+          } else {
+            this.$utility.notifySuccess(this.$notifications, '削除が完了しました');
+          }
         }
       },
       closeSaleModal() {
         this.isShowSaleModal = false;
         this.showModalItem = {};
-      },
-      destroy() {
-        if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
-          // TODO: 削除APIに飛ばす！
-        }
       },
     }
   }
@@ -211,7 +213,7 @@
     }
 
     .add-button {
-      padding: 10px;
+      padding: 15px;
     }
 
     .actions {

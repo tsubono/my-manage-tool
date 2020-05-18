@@ -16,6 +16,9 @@ class ProjectStatus extends Model
     {
         parent::boot();
         static::addGlobalScope(new LoginUser());
+        static::creating(function (Model $model) {
+            $model->user_id = auth()->id();
+        });
     }
 
     /**

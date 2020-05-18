@@ -137,10 +137,8 @@ class ProjectRepository implements ProjectRepositoryInterface
         DB::beginTransaction();
         try {
             foreach ($statuses as $status) {
-                // ログイン中のユーザーを設定
-                $status['user_id'] = auth()->user()->id;
                 // idがnullの場合は新規登録
-                if (is_null($status['id'])) {
+                if (empty($status['id'])) {
                     $this->status->create($status);
                     // idが入っている場合は更新
                 } else {

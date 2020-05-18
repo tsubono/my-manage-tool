@@ -107,15 +107,17 @@
       <!-- /buttons -->
     </div>
     <!-- /.content -->
-    <StatusModal
+    <status-modal
       v-if="isShowStatusModal"
       :statuses="statuses"
+      @update="updateProjectStatuses"
       @close="toggleStatusModal"
     />
   </div>
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
   import StatusModal from '~/components/modal/StatusModal'
   export default {
     components: {
@@ -168,8 +170,24 @@
       }
     },
     methods: {
+      ...mapActions('project', ['updateStatuses']),
       toggleStatusModal() {
         this.isShowStatusModal = !this.isShowStatusModal;
+      },
+      async updateProjectStatuses({ formStatuses, deletedStatusIds }) {
+        if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
+          const response = await this.updateStatuses({ statuses: formStatuses, deletedStatusIds: deletedStatusIds });
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+            if (response.errors !== undefined) {
+              this.errors = response.errors;
+              debugger
+            }
+          } else {
+            this.$utility.notifySuccess(this.$notifications, '更新が完了しました');
+            this.toggleStatusModal();
+          }
+        }
       },
       submit() {
         this.$emit('submit', this.form)

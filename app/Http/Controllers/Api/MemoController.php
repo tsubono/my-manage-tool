@@ -35,6 +35,7 @@ class MemoController extends Controller
     public function index()
     {
         $memos = $this->memoRepository->getAll();
+
         return response()->json(['memos' => $memos], 200, [], JSON_PRETTY_PRINT);
     }
 

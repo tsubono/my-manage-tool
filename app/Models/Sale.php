@@ -19,6 +19,9 @@ class Sale extends Model
     {
         parent::boot();
         static::addGlobalScope(new LoginUser());
+        static::creating(function (Model $model) {
+            $model->user_id = auth()->id();
+        });
     }
 
     /**
@@ -26,7 +29,7 @@ class Sale extends Model
      *
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $guarded = ['id', 'project', 'status'];
 
     /**
      * 日付へキャスト

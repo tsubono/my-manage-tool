@@ -11,34 +11,30 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group col-md-10 col-xs-12">
-            <multiselect
-              v-model="project.client"
+            <fg-select
+              v-model="form.client"
               :options="clientOptions"
-              label="name"
+              label="取引先"
+              select-label="name"
               track-by="id"
               placeholder="取引先"
-              @input="option => form.client_id = (option !== null ? option.id : null)"
+              :errors="errors.client_id"
+              @input="$event => form.client_id = ($event !== null ? $event.id : null)"
             >
-            </multiselect>
-            <!-- TODO: componentで纏めたい -->
-            <div v-for="(error, index) in errors.client_id" :key="index" :value="error" class="text-danger error">
-              {{ error }}
-            </div>
+            </fg-select>
           </div>
           <div class="form-group col-md-7 col-xs-12">
-            <multiselect
+            <fg-select
               v-model="form.status"
               :options="$utility.getStatusOptions(statuses)"
-              label="name"
+              label="ステータス"
+              select-label="name"
               track-by="id"
               placeholder="ステータス"
-              @input="option => form.status_id = (option !== null ? option.id : null)"
+              :errors="errors.status_id"
+              @input="$event => form.status_id = ($event !== null ? $event.id : null)"
             >
-            </multiselect>
-            <!-- TODO: componentで纏めたい -->
-            <div v-for="(error, index) in errors.status_id" :key="index" :value="error" class="text-danger error">
-              {{ error }}
-            </div>
+            </fg-select>
           </div>
           <div class="form-group col-md-2 col-md-offset-1 col-xs-12">
             <button class="btn btn-success btn-wd" @click="toggleStatusModal">
@@ -79,18 +75,16 @@
           >
           </fg-input>
           <div class="form-group col-md-10 col-xs-12">
-            <multiselect
-              v-model="form.labels"
-              :options="labelOptions"
+            <fg-multi-select
+              :labelOptions="labelOptions"
               open-direction="top"
-              multiple
-              taggable
-              label="name"
+              select-label="name"
               track-by="id"
-              @tag="addLabel"
               tag-placeholder="新しいラベルを作成"
-              placeholder="ラベル">
-            </multiselect>
+              @add-label="addLabel"
+              v-model="form.labels"
+            >
+            </fg-multi-select>
           </div>
         </div>
       </div>

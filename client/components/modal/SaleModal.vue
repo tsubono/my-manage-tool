@@ -11,25 +11,24 @@
         <div class="row">
           <div class="col-sm-12">
             <div class="form-group col-md-10 col-md-offset-1 col-xs-12">
-              <multiselect
+              <fg-select
                 v-model="sale.project"
                 :options="projectOptions"
-                label="name"
+                label="案件"
+                select-label="name"
                 track-by="id"
                 placeholder="案件"
-                @input="option => form.project_id = (option !== null ? option.id : null)"
+                :errors="errors.project_id"
+                @input="$event => form.project_id = ($event !== null ? $event.id : null)"
               >
-              </multiselect>
-              <!-- TODO: componentで纏めたい -->
-              <div v-for="(error, index) in errors.project_id" :key="index" :value="error" class="text-danger error">
-                {{ error }}
-              </div>
+              </fg-select>
             </div>
             <fg-input
               type="text"
               class="col-md-10 col-md-offset-1 col-xs-12"
               label="入金予定日"
               v-model="form.planned_deposit_date"
+              :errors="errors.planned_deposit_date"
             >
             </fg-input>
             <fg-input
@@ -59,21 +58,20 @@
               </textarea>
             </div>
             <div class="form-group col-md-7 col-md-offset-1 col-xs-12">
-              <multiselect
+              <fg-select
                 v-model="sale.status"
                 :options="$utility.getStatusOptions(statuses)"
-                label="name"
+                label="ステータス"
+                select-label="name"
                 track-by="id"
                 placeholder="ステータス"
-                @input="option => form.sale_status_id = (option !== null ? option.id : null)"
+                :errors="errors.sale_status_id"
+                @input="$event => form.sale_status_id = ($event !== null ? $event.id : null)"
               >
-              </multiselect>
-              <!-- TODO: componentで纏めたい -->
-              <div v-for="(error, index) in errors.sale_status_id" :key="index" :value="error" class="text-danger error">
-                {{ error }}
-              </div>
+              </fg-select>
             </div>
             <div class="form-group col-md-2 col-md-offset-1 col-xs-12">
+              <br>
               <button class="btn btn-success btn-wd" @click="toggleStatusModal">
                 ステータス管理
               </button>

@@ -3,11 +3,6 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card">
-          <!-- .header -->
-          <div class="header">
-            <h4 class="title">アカウント設定</h4>
-          </div>
-          <!-- /.header -->
           <!-- .content -->
           <div class="content">
             <!-- .form -->

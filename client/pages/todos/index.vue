@@ -43,10 +43,12 @@
                 <!-- 初期表示の場合 -->
                 <template v-else>
                   <div class="title-label col-md-7 col-xs-12">
-                    <input type="checkbox" name="checkbox" :id="'checkbox' + index" :checked="item.status" />
+                    <input type="checkbox" name="checkbox" :id="'checkbox' + index" :checked="item.status"
+                           @change="onClickTodoCheckBox(item.id, !item.status)"
+                    />
                     <label :for="'checkbox' + index">{{ item.title }}</label>
                   </div>
-                  <div class="limit col-md-3 col-xs-12 text-right" :class="{danger: !item.status}">
+                  <div class="limit col-md-3 col-xs-12 text-right" :class="{danger: !item.status && item.is_warning}">
                     <span class="ti-calendar"></span>
                     <span class="datetime">{{ item.limit_datetime === null ? '期限なし' : item.limit_datetime }}</span>
                   </div>
@@ -137,7 +139,7 @@
       ...mapState('todo', ['todos']),
     },
     methods: {
-      ...mapActions('todo', ['store', 'update', 'destroy']),
+      ...mapActions('todo', ['store', 'update', 'destroy', 'toggleStatus']),
       onClickEdit(item) {
         this.errors[this.form.id] = undefined;
         this.isEdit = true;
@@ -197,6 +199,17 @@
             this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
           } else {
             this.$utility.notifySuccess(this.$notifications, '削除が完了しました');
+          }
+        }
+      },
+      async onClickTodoCheckBox(id, status) {
+        if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
+          const response = await this.toggleStatus({ id: id, status: status });
+          if (response.isError !== undefined) {
+            this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
+          } else {
+            const successMessage = status ? '完了にしました' : '未完了にしました';
+            this.$utility.notifySuccess(this.$notifications, successMessage);
           }
         }
       },

@@ -8,7 +8,7 @@
           <span class="icon-bar bar2"></span>
           <span class="icon-bar bar3"></span>
         </button>
-        <a class="navbar-brand">{{routeName}}</a>
+        <a class="navbar-brand">{{ headerTitle }}</a>
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav navbar-right">
@@ -24,9 +24,29 @@
   import { mapActions } from 'vuex'
   export default {
     computed: {
-      routeName() {
+      headerTitle() {
         const { name } = this.$route;
-        return this.capitalizeFirstLetter(name);
+        if (name.match(/clients/)) {
+          return '取引先管理'
+        }
+        if (name.match(/projects/)) {
+          return '案件管理'
+        }
+        if (name.match(/todos/)) {
+          return 'TODO'
+        }
+        if (name.match(/memos/)) {
+          return 'メモ'
+        }
+        if (name.match(/sales/)) {
+          return '売上'
+        }
+        if (name.match(/analysis/)) {
+          return '分析'
+        }
+        if (name.match(/account/)) {
+          return 'アカウント設定'
+        }
       }
     },
     data() {
@@ -35,10 +55,6 @@
       }
     },
     methods: {
-      ...mapActions('app', ['fetchStudyBooks']),
-      capitalizeFirstLetter(string) {
-        return string !== null ? string.charAt(0).toUpperCase() + string.slice(1) : null
-      },
       closeDropDown() {
         this.activeNotifications = false
       },

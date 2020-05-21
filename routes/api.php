@@ -44,6 +44,8 @@ Route::group([
     Route::get('labels/project', 'LabelController@getProjectLabels');
     Route::resource('labels', 'LabelController', ['only' => ['index']]);
     Route::resource('memos', 'MemoController');
+    Route::get('todos/current', 'TodoController@current');
+    Route::post('todos/toggle-status/{id}', 'TodoController@toggleStatus');
     Route::resource('todos', 'TodoController');
 
     Route::resource('sales', 'SaleController', ['only' => ['store', 'update', 'destroy']]);

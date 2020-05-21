@@ -3,6 +3,7 @@
 namespace App\Repositories\Todo;
 
 use App\Models\Todo;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -28,7 +29,9 @@ class TodoRepository implements TodoRepositoryInterface
      */
     public function getAll(): Collection
     {
-        return $this->todo->get();
+        return $this->todo
+            ->orderBy('limit_datetime', 'asc')
+            ->get();
     }
 
     /**
@@ -77,5 +80,35 @@ class TodoRepository implements TodoRepositoryInterface
     {
         $todo = $this->todo->findOrFail($id);
         $todo->delete();
+    }
+
+    /**
+     * 期限が近い / 過去のTODOを取得する
+     *
+     * @return Collection
+     */
+    public function getCurrent(): Collection
+    {
+        $limitWarningDays = Carbon::now()->addDays(Todo::LIMIT_WARNING_DAYS);
+        return $this->todo
+            ->where('limit_datetime', '<', $limitWarningDays)
+            ->orderBy('limit_datetime', 'asc')
+            ->get();
+    }
+
+    /**
+     * ステータスを更新する (true or false)
+     *
+     * @param int $id
+     * @param bool $status
+     * @return Todo
+     */
+    public function toggleStatus(int $id, bool $status): Todo
+    {
+        $todo = $this->todo->findOrFail($id);
+        $todo->update([
+            'status' => $status
+        ]);
+        return $todo;
     }
 }

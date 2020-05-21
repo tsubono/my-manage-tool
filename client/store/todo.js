@@ -25,6 +25,15 @@ export const actions = {
         console.log(error);
       });
   },
+  async fetchCurrent({ commit }) {
+    await this.$axios.$get('/todos/current')
+      .then((response) => {
+        commit('set', response.todos);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
   async store({ commit, state }, todo) {
     return await this.$axios.$post('/todos', todo)
       .then((response) => {
@@ -62,6 +71,19 @@ export const actions = {
     return await this.$axios.$delete(`/todos/${id}`)
       .then((response) => {
         commit('set', state.todos.filter(todo => todo.id !== id));
+        return true;
+      })
+      .catch((error) => {
+        return { isError: true };
+      });
+  },
+  async toggleStatus({ commit, state }, { id, status }) {
+    return await this.$axios.$post(`/todos/toggle-status/${id}`, { status: status })
+      .then((response) => {
+        const todos = state.todos.map(function(todo, index, array) {
+          return (todo.id === response.todo.id) ? response.todo : todo;
+        });
+        commit('set', todos);
         return true;
       })
       .catch((error) => {

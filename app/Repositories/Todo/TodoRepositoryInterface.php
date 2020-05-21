@@ -12,4 +12,6 @@ interface TodoRepositoryInterface
     public function store(array $data): Todo;
     public function update(int $id, array $data): Todo;
     public function destroy(int $id);
+    public function getCurrent(): Collection;
+    public function toggleStatus(int $id, bool $status): Todo;
 }

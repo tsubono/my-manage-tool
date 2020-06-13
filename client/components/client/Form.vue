@@ -90,7 +90,7 @@
 </template>
 
 <script>
-  import FileUploader from '~/components/common/file/uploader'
+  import FileUploader from '~/components/common/file/Uploader.vue'
 
   export default {
     layout: "dashboard",
@@ -158,8 +158,8 @@
 
     .edit-icon {
       position: relative;
-      top: 70px;
-      right: 45px;
+      top: -42px;
+      right: -74px;
       cursor: pointer;
       font-size: 20px;
       border-radius: 50%;

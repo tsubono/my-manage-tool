@@ -68,7 +68,7 @@
 </template>
 
 <script>
-  import FileUploader from '~/components/common/file/uploader'
+  import FileUploader from '~/components/common/file/Uploader.vue'
   import cloneDeep from 'lodash.clonedeep'
 
   /**

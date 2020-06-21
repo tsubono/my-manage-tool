@@ -31,6 +31,9 @@ php artisan migrate
 ### Nuxt.js初期設定 (Local)
 ```
 cd client
+cp .env.example .env
 npm install
 npm run dev
 ```
+
+.envにはAPI (Laravel側)のエンドポイントを記載

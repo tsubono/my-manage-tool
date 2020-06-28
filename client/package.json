@@ -28,6 +28,7 @@
     "nuxt-vue-multiselect": "^1.0.4",
     "vue-chartjs": "^3.5.0",
     "vue-clickaway": "^2.1.0",
+    "vue-color": "^2.7.1",
     "vue-ctk-date-time-picker": "^2.4.0",
     "vue-router": "^3.1.6"
   },

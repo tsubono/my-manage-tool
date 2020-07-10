@@ -8,13 +8,13 @@
       to="/clients"
       :class="{ 'active': $nuxt.$route.name.match(/clients/) }">
       <i class="ti-face-smile"></i>
-      <p>取引先一覧</p>
+      <p>取引先管理</p>
     </sidebar-link>
     <sidebar-link
       to="/projects"
       :class="{ 'active': $nuxt.$route.name.match(/projects/) }">
       <i class="ti-crown"></i>
-      <p>案件一覧</p>
+      <p>案件管理</p>
     </sidebar-link>
     <sidebar-link
       to="/todos"
@@ -32,13 +32,13 @@
       :to="{ name:'sales-year-month', params: { year: new Date().getFullYear(), month: new Date().getMonth() + 1 } }"
       :class="{ 'active': $nuxt.$route.name === 'sales-year-month' }">
       <i class="ti-medall"></i>
-      <p>売上</p>
+      <p>売上管理</p>
     </sidebar-link>
     <sidebar-link
       :to="{ name:'sales-year-analysis', params: { year: new Date().getFullYear() } }"
       :class="{ 'active': $nuxt.$route.name === 'sales-year-analysis' }">
       <i class="ti-bar-chart"></i>
-      <p>分析</p>
+      <p>売上分析</p>
     </sidebar-link>
     <sidebar-link to="/account">
       <i class="ti-user"></i>

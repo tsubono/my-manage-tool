@@ -41,7 +41,7 @@
                   </button>
                 </div>
                 <div class="information">
-                  <h4>お知らせ</h4>
+                  <h4>Information</h4>
                   <div class="information-list">
                     ありません
                   </div>

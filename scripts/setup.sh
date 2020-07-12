@@ -12,7 +12,7 @@ ln -nfs storage /home/manage/config/storage
 sudo chmod -R 777 storage
 cd /home/manage/my-manage-tool/
 pwd
-composer install --optimize-autoloader --no-dev
+/usr/local/bin/composer install --optimize-autoloader --no-dev
 php artisan config:cache
 php artisan migrate --force
 

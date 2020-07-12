@@ -1,3 +1,4 @@
+sudo su - manage
 cd /home/manage/config
 ln nuxt.env ../my-manage-tool/client/.env
 ln laravel.env ../my-manage-tool/.env

@@ -2,7 +2,7 @@
   <side-bar type="sidebar">
     <sidebar-link to="/">
       <i class="ti-panel"></i>
-      <p>Top</p>
+      <p>DashBoard</p>
     </sidebar-link>
     <sidebar-link
       to="/clients"

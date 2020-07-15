@@ -52,7 +52,7 @@ class AuthController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        Log::info('ログイン');
+        Log::info('ログインしました');
 
         return response()->json(compact('token'));
     }

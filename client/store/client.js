@@ -16,6 +16,7 @@ export const actions = {
   async fetch({ commit }) {
     await this.$axios.$get('/clients')
       .then((response) => {
+        console.log('fetched clients');
         commit('set', response.clients);
       })
       .catch((error) => {

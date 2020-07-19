@@ -1,10 +1,6 @@
 #!/bin/bash
-isExistApp = `pgrep httpd`
 sudo pkill -KILL -f nuxt
-
-if [[ -n  $isExistApp ]]; then
-    sudo service httpd stop
-fi
+sudo service httpd stop
 cd /home/manage/my-manage-tool
 sudo rm -r storage
 cd

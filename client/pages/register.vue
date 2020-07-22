@@ -55,7 +55,7 @@
             this.$auth.loginWith('local', {data: this.user});
           })
           .catch((err) => {
-            if (err.response.status === 422) {
+            if (err.response !== undefined && err.response.status === 422) {
               this.errors = err.response.data;
             }
           });

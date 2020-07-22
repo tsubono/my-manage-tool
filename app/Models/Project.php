@@ -50,6 +50,7 @@ class Project extends Model
         'client',
         'labels',
         'status',
+        'records',
     ];
 
     /**
@@ -86,6 +87,18 @@ class Project extends Model
     }
 
     /**
+     * レコード一覧情報を取得する
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function getRecordsAttribute()
+    {
+        return $this->records()
+            ->getResults()
+            ->makeHidden(['project']);
+    }
+
+    /**
      * 紐づく取引先
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -113,5 +126,15 @@ class Project extends Model
     public function status()
     {
         return $this->belongsTo(ProjectStatus::class, 'status_id');
+    }
+
+    /**
+     * 紐づくレコード
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function records()
+    {
+        return $this->hasMany(ProjectRecord::class);
     }
 }

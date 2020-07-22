@@ -58,22 +58,28 @@
               :errors="errors.content"
             ></textarea>
           </div>
-          <fg-input
-            type="text"
-            class="col-md-10 col-xs-12"
-            label="開始日"
-            v-model="form.start_date"
-            :errors="errors.start_date"
-          >
-          </fg-input>
-          <fg-input
-            type="text"
-            class="col-md-10 col-xs-12"
-            label="納期"
-            v-model="form.limit_date"
-            :errors="errors.limit_date"
-          >
-          </fg-input>
+          <div class="form-group input-wrapper col-md-10 col-xs-12">
+            <label>
+              開始日
+            </label>
+            <Datetime
+              v-model="form.start_date"
+              :format="'YYYY-MM-DD'"
+              :overlay="true"
+              :onlyDate="true"
+            ></Datetime>
+          </div>
+          <div class="form-group input-wrapper col-md-10 col-xs-12">
+            <label>
+              納期
+            </label>
+            <Datetime
+              v-model="form.limit_date"
+              :format="'YYYY-MM-DD'"
+              :overlay="true"
+              :onlyDate="true"
+            ></Datetime>
+          </div>
           <div class="form-group col-md-10 col-xs-12">
             <fg-multi-select
               :labelOptions="labelOptions"
@@ -113,9 +119,12 @@
 <script>
   import { mapActions } from 'vuex'
   import StatusModal from '~/components/modal/StatusModal'
+  import Datetime from 'vue-ctk-date-time-picker'
+
   export default {
     components: {
       StatusModal,
+      Datetime,
     },
     head () {
       return {

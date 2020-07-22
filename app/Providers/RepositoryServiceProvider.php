@@ -37,6 +37,11 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Sale\SaleRepositoryInterface::class,
             \App\Repositories\Sale\SaleRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Project\Record\RecordRepositoryInterface::class,
+            \App\Repositories\Project\Record\RecordRepository::class
+        );
     }
 
     /**

@@ -44,6 +44,9 @@
                       <nuxt-link :to="{ name:'projects-id', params: { id: item.id } }">
                         <span class="ti-pencil-alt"></span>
                       </nuxt-link>
+                      <nuxt-link :to="{ name:'projects-id-records', params: { id: item.id } }">
+                        <span class="ti-time"></span>
+                      </nuxt-link>
                       <span class="ti-trash text-danger" @click="onClickDelete(item.id)"></span>
                     </div>
                   </td>

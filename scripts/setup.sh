@@ -1,5 +1,6 @@
 #!/bin/bash
 source /home/manage/.bash_profile
+sh create_env.sh
 
 cd /home/manage/config
 ln nuxt.env ../my-manage-tool/client/.env

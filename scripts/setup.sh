@@ -1,5 +1,6 @@
 #!/bin/bash
 source /home/manage/.bash_profile
+cd /home/manage
 sh create_env.sh
 
 cd /home/manage/config

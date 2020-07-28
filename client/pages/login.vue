@@ -37,8 +37,8 @@
     data() {
       return {
         user: {
-          email: "user1@user.com",
-          password: "password1",
+          email: "",
+          password: "",
         },
         error: null,
       }

@@ -23,22 +23,28 @@
               >
               </fg-select>
             </div>
-            <fg-input
-              type="text"
-              class="col-md-10 col-md-offset-1 col-xs-12"
-              label="入金予定日"
-              v-model="form.planned_deposit_date"
-              :errors="errors.planned_deposit_date"
-            >
-            </fg-input>
-            <fg-input
-              type="text"
-              class="col-md-10 col-md-offset-1 col-xs-12"
-              label="入金日"
-              v-model="form.deposit_date"
-              :errors="errors.deposit_date"
-            >
-            </fg-input>
+            <div class="form-group input-wrapper col-md-10 col-md-offset-1 col-xs-12">
+              <label>
+                入金予定日
+              </label>
+              <Datetime
+                v-model="form.planned_deposit_date"
+                :format="'YYYY-MM-DD'"
+                :overlay="true"
+                :onlyDate="true"
+              ></Datetime>
+            </div>
+            <div class="form-group input-wrapper col-md-10 col-md-offset-1 col-xs-12">
+              <label>
+                入金日
+              </label>
+              <Datetime
+                v-model="form.deposit_date"
+                :format="'YYYY-MM-DD'"
+                :overlay="true"
+                :onlyDate="true"
+              ></Datetime>
+            </div>
             <fg-input
               type="number"
               class="col-md-10 col-md-offset-1 col-xs-12"
@@ -107,12 +113,14 @@
   import { mapActions } from 'vuex'
   import ModalWrapper from '~/components/modal/ModalWrapper'
   import StatusModal from '~/components/modal/StatusModal'
+  import Datetime from 'vue-ctk-date-time-picker'
 
   export default {
     name: 'sale-modal',
     components: {
       ModalWrapper,
       StatusModal,
+      Datetime,
     },
     props: {
       sale: {

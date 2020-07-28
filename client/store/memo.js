@@ -20,6 +20,7 @@ export const actions = {
     await this.$axios.$get('/memos')
       .then((response) => {
         commit('set', response.memos);
+        console.log('fetched memos');
       })
       .catch((error) => {
         console.log(error);

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnToDummyTable extends Migration
+class AddTestColumnToDummy2Table extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddColumnToDummyTable extends Migration
      */
     public function up()
     {
-        Schema::table('dummy', function (Blueprint $table) {
+        Schema::table('dummy_2', function (Blueprint $table) {
             $table->string('test');
         });
     }
@@ -25,7 +25,7 @@ class AddColumnToDummyTable extends Migration
      */
     public function down()
     {
-        Schema::table('dummy', function (Blueprint $table) {
+        Schema::table('dummy_2', function (Blueprint $table) {
             $table->dropColumn('test');
         });
     }

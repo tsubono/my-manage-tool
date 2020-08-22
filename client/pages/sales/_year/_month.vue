@@ -68,6 +68,11 @@
                     </div>
                   </td>
                 </tr>
+                <tr v-if="sales.length === 0">
+                  <td :colspan="table.columns.length" class="text-center">
+                    データがありません
+                  </td>
+                </tr>
                 <!-- /sale row -->
                 </tbody>
               </table>

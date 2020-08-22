@@ -11,14 +11,19 @@
             </div>
             <!-- /.add-button -->
             <!-- memo list -->
-            <div class="row list">
-              <div class="col-lg-4 col-sm-6" v-for="(item, index) in memos" :key="index">
-              <div class="card item" @click="showMemoModal(item)">
-                <div class="content">
-                  {{ item.title }}
+            <div class="list">
+              <div class="row">
+                <div class="col-lg-4 col-sm-6" v-for="(item, index) in memos" :key="index">
+                  <div class="card item" @click="showMemoModal(item)">
+                    <div class="content">
+                      {{ item.title }}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+              <div v-if="memos.length === 0">
+                データがありません
+              </div>
             </div>
             <!-- /memo list -->
           </div>
@@ -83,8 +88,9 @@
 <style lang="scss" scoped>
   #memo-list {
     .list {
-      margin: 10px auto;
+      margin: 10px 30px;
       min-height: 200px;
+      padding: 0 15px 30px 15px;
 
       .item {
         height: 100px;

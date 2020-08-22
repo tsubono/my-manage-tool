@@ -29,7 +29,7 @@ class Project extends Model
      *
      * @var array
      */
-    protected $guarded = ['id', 'labels', 'client', 'status'];
+    protected $guarded = ['id', 'labels', 'client', 'status', 'records'];
 
     /**
      * 日付へキャスト

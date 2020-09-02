@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface ProjectRepositoryInterface
 {
-    public function getAll(): Collection;
+    public function getList(array $searchForm): Collection;
     public function getOne(int $id): Project;
     public function store(array $data): Project;
     public function update(int $id, array $data): Project;

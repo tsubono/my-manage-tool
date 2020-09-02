@@ -7,6 +7,8 @@ use App\Http\Requests\ProjectRequest;
 use App\Http\Requests\ProjectStatusRequest;
 use App\Models\ProjectStatus;
 use App\Repositories\Project\ProjectRepositoryInterface as ProjectRepository;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ProjectController
@@ -41,9 +43,10 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projects = $this->projectRepository->getAll();
+        $searchForm = $request->get('searchForm');
+        $projects = $this->projectRepository->getList(json_decode($searchForm, true));
 
         return response()->json(['projects' => $projects], 200, [], JSON_PRETTY_PRINT);
     }

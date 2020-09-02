@@ -40,11 +40,21 @@ class ProjectRepository implements ProjectRepositoryInterface
     /**
      * 案件を全件取得する
      *
+     * @param array $searchForm
      * @return Collection
      */
-    public function getAll(): Collection
+    public function getList(array $searchForm): Collection
     {
-        return $this->project->orderBy('created_at', 'desc')->get();
+        $query = $this->project->query();
+        !empty($searchForm['name']) && $query->where('name', 'LIKE', "%{$searchForm['name']}%");
+        !empty($searchForm['status_id']) && $query->where('status_id', $searchForm['status_id']);
+        if (!empty($searchForm['labels'])) {
+            $label_ids = array_column($searchForm['labels'], 'id');
+            $query->whereHas('labels', function($query) use ($label_ids) {
+                $query->whereIn('labels.id', $label_ids);
+            });
+        }
+        return $query->orderBy('created_at', 'desc')->get();
     }
 
     /**

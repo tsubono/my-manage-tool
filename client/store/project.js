@@ -18,8 +18,12 @@ export const mutations = {
 };
 
 export const actions = {
-  async fetch({ commit }) {
-    await this.$axios.$get('/projects')
+  async fetch({ commit }, searchForm = {}) {
+    await this.$axios.$get('/projects', {
+      params: {
+        searchForm
+      }
+    })
       .then((response) => {
         commit('setProject', response.projects);
       })

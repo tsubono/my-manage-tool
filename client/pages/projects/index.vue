@@ -1,98 +1,166 @@
 <template>
   <div id="project-list">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <!-- .add-button -->
-            <div class="text-right add-button">
-              <button class="btn btn-primary" @click="$router.push('/projects/new')">
-                <span class="ti-plus"></span>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="content">
+            <div class="row">
+              <div class="col-md-6 col-xs-12">
+                <fg-input
+                  type="text"
+                  class="col-md-10 col-xs-12"
+                  label="名前"
+                  v-model="searchForm.name"
+                >
+                </fg-input>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                <fg-select
+                  :options="$utility.getStatusOptions(statuses)"
+                  label="ステータス"
+                  select-label="name"
+                  track-by="id"
+                  @input="$event => searchForm.status_id = ($event !== null ? $event.id : null)"
+                  v-model="searchForm.status"
+                >
+                </fg-select>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                <fg-multi-select
+                  :labelOptions="labels"
+                  label="ラベル"
+                  open-direction="top"
+                  select-label="name"
+                  track-by="id"
+                  v-model="searchForm.labels"
+                  :taggable="false"
+                >
+                </fg-multi-select>
+              </div>
+            </div>
+          </div>
+          <div class="footer text-center row search-btn-area">
+            <div class="col-md-4 col-xs-12">
+              <button class="btn btn-default reset-btn" @click="resetSearch">
+                リセット
               </button>
             </div>
-            <!-- /.add-button -->
-            <!-- project list -->
-            <div class="content table-responsive table-full-width">
-              <table class="table table-striped">
-                <thead>
-                <tr>
-                  <th v-for="column in table.columns" :key="column">{{ column }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- project row -->
-                <tr v-for="(item, index) in projects" :key="index">
-                  <td v-for="column in table.columns" :key="column" v-if="item[column && column.toLowerCase()] !== 'undefined'">
-                    <!-- clientの場合はリンク -->
-                    <nuxt-link :to="{ name:'clients-id', params: { id: item.client.id } }" v-if="column === 'Client'">
-                      {{ item.client.name}}
-                    </nuxt-link>
-                    <!-- statusの場合はラベル -->
-                    <span class="status-label" :style="{'background': item.status.color}" v-else-if="column === 'Status'">
-                      {{ item.status.name }}
-                    </span>
-                    <!-- Labelsの場合はラベル -->
-                    <div class="labels" v-else-if="column === 'Labels'">
-                      <div class="label" v-for="label in item.labels" :key="label.name">
-                        {{ label.name }}
-                      </div>
-                    </div>
-                    <!-- 他はテキスト表示 -->
-                    <span v-else>{{ item[column.toLowerCase()] }}</span>
-                  </td>
-                  <td>
-                    <div class="d-flex actions">
-                      <nuxt-link :to="{ name:'projects-id', params: { id: item.id } }">
-                        <span class="ti-pencil-alt"></span>
-                      </nuxt-link>
-                      <nuxt-link :to="{ name:'projects-id-records', params: { id: item.id } }">
-                        <span class="ti-time"></span>
-                      </nuxt-link>
-                      <span class="ti-trash text-danger" @click="onClickDelete(item.id)"></span>
-                    </div>
-                  </td>
-                </tr>
-                <tr v-if="projects.length === 0">
-                  <td :colspan="table.columns.length" class="text-center">
-                    データがありません
-                  </td>
-                </tr>
-                <!-- /project row -->
-                </tbody>
-              </table>
+            <div class="col-md-6 col-xs-12">
+              <button class="btn btn-fill search-btn" @click="submitSearch">
+                <span class="ti-search"></span> 検索
+              </button>
             </div>
-            <!-- /project list -->
           </div>
         </div>
       </div>
+    </div>
+    <div class="card">
+      <!-- .add-button -->
+      <div class="text-right add-button">
+        <button class="btn btn-primary" @click="$router.push('/projects/new')">
+          <span class="ti-plus"></span>
+        </button>
+      </div>
+      <!-- /.add-button -->
+      <!-- project list -->
+      <div class="content table-responsive table-full-width">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th v-for="column in table.columns" :key="column">{{ column }}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!-- project row -->
+          <tr v-for="(item, index) in projects" :key="index">
+            <td v-for="column in table.columns" :key="column"
+                v-if="item[column && column.toLowerCase()] !== 'undefined'">
+              <!-- clientの場合はリンク -->
+              <nuxt-link :to="{ name:'clients-id', params: { id: item.client.id } }" v-if="column === 'Client'">
+                {{ item.client.name}}
+              </nuxt-link>
+              <!-- statusの場合はラベル -->
+              <span class="status-label" :style="{'background': item.status.color}" v-else-if="column === 'Status'">
+                      {{ item.status.name }}
+                    </span>
+              <!-- Labelsの場合はラベル -->
+              <div class="labels" v-else-if="column === 'Labels'">
+                <div class="label" v-for="label in item.labels" :key="label.name">
+                  {{ label.name }}
+                </div>
+              </div>
+              <!-- 他はテキスト表示 -->
+              <span v-else>{{ item[column.toLowerCase()] }}</span>
+            </td>
+            <td>
+              <div class="d-flex actions">
+                <nuxt-link :to="{ name:'projects-id', params: { id: item.id } }">
+                  <span class="ti-pencil-alt"></span>
+                </nuxt-link>
+                <nuxt-link :to="{ name:'projects-id-records', params: { id: item.id } }">
+                  <span class="ti-time"></span>
+                </nuxt-link>
+                <span class="ti-trash text-danger" @click="onClickDelete(item.id)"></span>
+              </div>
+            </td>
+          </tr>
+          <tr v-if="projects.length === 0">
+            <td :colspan="table.columns.length" class="text-center">
+              データがありません
+            </td>
+          </tr>
+          <!-- /project row -->
+          </tbody>
+        </table>
+      </div>
+      <!-- /project list -->
+    </div>
   </div>
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex'
+  import {mapState, mapActions} from 'vuex'
+  import cloneDeep from 'lodash.clonedeep'
+  import Datetime from 'vue-ctk-date-time-picker'
 
   export default {
     layout: 'default',
+    components: {
+      Datetime,
+    },
     head() {
       return {
         title: '案件一覧',
       }
     },
     async fetch ({ store }) {
-      await store.dispatch('project/fetch');
+      await Promise.all([
+        store.dispatch('project/fetch'),
+        store.dispatch('label/fetch'),
+      ]);
     },
     computed: {
-      ...mapState('project', ['projects']),
+      ...mapState('project', ['projects', 'statuses']),
+      ...mapState('label', ['projectLabels']),
+      labels() {
+        return cloneDeep(this.projectLabels);
+      },
     },
     data() {
       return {
         table: {
           title: '取引先一覧',
           columns: ['Name', 'Client', 'Status', 'Labels', ''],
+        },
+        searchForm: {
+          name: null,
+          labels: [],
+          status: null,
         }
       }
     },
     methods: {
-      ...mapActions('project', ['destroy']),
+      ...mapActions('project', ['search', 'destroy']),
       async onClickDelete(id) {
         if (this.$utility.chkCanEdit(this.$notifications, this.$auth.user)) {
           const response = await this.destroy(id);
@@ -102,6 +170,12 @@
             this.$utility.notifySuccess(this.$notifications, '削除が完了しました');
           }
         }
+      },
+      async submitSearch() {
+        await this.$store.dispatch('project/fetch', this.searchForm);
+      },
+      async resetSearch() {
+        await this.$store.dispatch('project/fetch');
       },
     }
   }
@@ -132,8 +206,17 @@
         margin-left: 10px;
       }
     }
-    .add-button {
-      padding: 10px;
+    .search-btn-area {
+      width: 50%;
+      margin: 0 auto;
+
+      .add-button {
+        padding: 10px;
+      }
+      .search-btn {
+        margin-bottom: 20px;
+        width: 300px;
+      }
     }
   }
 </style>

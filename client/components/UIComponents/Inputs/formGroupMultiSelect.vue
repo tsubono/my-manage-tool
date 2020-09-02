@@ -13,7 +13,7 @@
       @tag="addLabel"
       v-model="computedModel"
       multiple
-      taggable
+      :taggable="taggable"
     >
     </multiselect>
     <div v-for="(error, index) in errors" :key="index" :value="error" class="text-danger error">
@@ -42,6 +42,10 @@
         type: Object | null, // 親モデルの値が入ってくるので、型を指定してあげる
         default: null,
       },
+      taggable: {
+        type: Boolean | null,
+        default: true
+      }
     },
     computed: {
       computedModel: {

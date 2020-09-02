@@ -25,6 +25,6 @@
     },
     "dependencies": {
         "vue-color": "^2.7.1",
-        "vue-ctk-date-time-picker": "^2.4.0"
+        "vue-ctk-date-time-picker": "^2.5.0"
     }
 }

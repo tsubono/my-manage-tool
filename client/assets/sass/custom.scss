@@ -103,3 +103,9 @@ a {
 .multiselect__tags {
   border: 1px solid #CCC5B9;
 }
+
+@media (max-width: 991px) {
+  .wrapper {
+    transform: none;
+  }
+}

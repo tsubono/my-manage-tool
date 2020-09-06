@@ -1,16 +1,14 @@
 export const state = () => ({
   projectLabels: [],
   clientLabels: [],
+  subcontractorLabels: [],
 });
-
-export const getters = {
-  clients: state => state.clients,
-};
 
 export const mutations = {
   set(state, data) {
     state.projectLabels = data.projectLabels;
     state.clientLabels = data.clientLabels;
+    state.subcontractorLabels = data.subcontractorLabels;
   },
 
 };

@@ -8,6 +8,7 @@
           :statuses="statuses"
           :project="project"
           :labelOptions="labels"
+          :subcontractorOptions="subcontractors"
           @submit="submit"
           :errors="errors"
         >
@@ -43,12 +44,14 @@
         store.dispatch('project/fetch'),
         store.dispatch('client/fetch'),
         store.dispatch('label/fetch'),
+        store.dispatch('subcontractor/fetch'),
       ]);
     },
     computed: {
       ...mapState('project', ['projects', 'statuses']),
       ...mapState('client', ['clients']),
       ...mapState('label', ['projectLabels']),
+      ...mapState('subcontractor', ['subcontractors']),
       /**
        * IDにひもづく案件を取得
        *

@@ -14,9 +14,11 @@ class Label extends Model
 {
     const TYPE_PROJECT = 1;
     const TYPE_CLIENT = 2;
+    const TYPE_SUBCONTRACTOR = 3;
     const TYPES = [
         self::TYPE_PROJECT,
-        self::TYPE_CLIENT
+        self::TYPE_CLIENT,
+        self::TYPE_SUBCONTRACTOR,
     ];
 
     protected static function boot()
@@ -64,5 +66,16 @@ class Label extends Model
     public function scopeClient($query)
     {
         return $query->where('type', self::TYPE_CLIENT);
+    }
+
+    /**
+     * 外注先にひもづくラベルに絞るScope
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeSubcontractor($query)
+    {
+        return $query->where('type', self::TYPE_SUBCONTRACTOR);
     }
 }

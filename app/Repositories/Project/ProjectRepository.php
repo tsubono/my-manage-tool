@@ -5,6 +5,7 @@ namespace App\Repositories\Project;
 use App\Models\Project;
 use App\Models\Label;
 use App\Models\ProjectStatus;
+use App\Models\Subcontractor;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -31,14 +32,20 @@ class ProjectRepository implements ProjectRepositoryInterface
      */
     private $status;
 
-    public function __construct(Project $project, Label $label, ProjectStatus $status) {
+    /**
+     * @var Subcontractor
+     */
+    private $subcontractor;
+
+    public function __construct(Project $project, Label $label, ProjectStatus $status, Subcontractor $subcontractor) {
         $this->project = $project;
         $this->label = $label;
         $this->status = $status;
+        $this->subcontractor = $subcontractor;
     }
 
     /**
-     * 案件を全件取得する
+     * 案件を検索取得する
      *
      * @param array $searchForm
      * @return Collection
@@ -83,6 +90,8 @@ class ProjectRepository implements ProjectRepositoryInterface
             $project = $this->project->create($data);
             // ラベル更新
             $this->updateLabels($project, $data);
+            // 外注先更新
+            $this->updateSubcontractors($project, $data);
 
             DB::commit();
 
@@ -111,6 +120,8 @@ class ProjectRepository implements ProjectRepositoryInterface
             $project->update($data);
             // ラベル更新
             $this->updateLabels($project, $data);
+            // 外注先更新
+            $this->updateSubcontractors($project, $data);
 
             DB::commit();
 
@@ -194,5 +205,23 @@ class ProjectRepository implements ProjectRepositoryInterface
             }
         }
         $project->labels()->sync($label_ids);
+    }
+
+    /**
+     * 外注先を更新する
+     *
+     * @param Project $project
+     * @param array $data
+     */
+    private function updateSubcontractors(Project &$project, array $data)
+    {
+        $subcontractors = [];
+        if (!empty($data['subcontractors'])) {
+            foreach ($data['subcontractors'] as $subcontractorData) {
+                $subcontractors[$subcontractorData['subcontractor']['id']] = [];
+                $subcontractors[$subcontractorData['subcontractor']['id']]['price'] = $subcontractorData['price'];
+            }
+        }
+        $project->subcontractors()->sync($subcontractors);
     }
 }

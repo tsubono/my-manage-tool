@@ -29,7 +29,7 @@ class Project extends Model
      *
      * @var array
      */
-    protected $guarded = ['id', 'labels', 'client', 'status', 'records'];
+    protected $guarded = ['id', 'labels', 'client', 'status', 'records', 'subcontractors'];
 
     /**
      * 日付へキャスト
@@ -51,6 +51,7 @@ class Project extends Model
         'labels',
         'status',
         'records',
+        'subcontractors',
     ];
 
     /**
@@ -99,6 +100,18 @@ class Project extends Model
     }
 
     /**
+     * 外注先一覧情報を取得する
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function getSubcontractorsAttribute()
+    {
+        return $this->subcontractors()
+            ->getResults()
+            ->makeHidden(['projects']);
+    }
+
+    /**
      * 紐づく取引先
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -136,5 +149,16 @@ class Project extends Model
     public function records()
     {
         return $this->hasMany(ProjectRecord::class);
+    }
+
+    /**
+     * 紐づく外注先
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function subcontractors()
+    {
+        return $this->belongsToMany(Subcontractor::class)
+            ->withPivot(['price']);
     }
 }

@@ -73,6 +73,20 @@ class Utility {
   };
 
   /**
+   * セレクトボックス用の外注先一覧を取得
+   *
+   * @param subcntractors
+   * @returns {Array}
+   */
+  getSubcontractorOptions = (subcntractors) => {
+    let options = [];
+    subcntractors.map(subcntractor => {
+      options.push({id: subcntractor.id, name: subcntractor.name});
+    });
+    return options;
+  };
+
+  /**
    * imgタグ用の画像URLを取得
    * process.env.APP_URL = ApiのURL
    *

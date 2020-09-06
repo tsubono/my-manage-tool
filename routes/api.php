@@ -59,5 +59,5 @@ Route::group([
 
     Route::post('file/upload', 'FileController@upload');
     Route::resource('project-records', 'ProjectRecordController', ['only' => ['store', 'update', 'destroy']]);
-
+    Route::resource('subcontractors', 'SubcontractorController');
 });

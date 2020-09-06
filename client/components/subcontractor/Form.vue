@@ -2,7 +2,7 @@
   <div class="card col-md-10 col-md-offset-1">
     <!-- .header -->
     <div class="header">
-      <h4 class="title">取引先情報</h4>
+      <h4 class="title">外注先情報</h4>
     </div>
     <!-- /.header -->
     <!-- .content -->
@@ -33,22 +33,6 @@
             :errors="errors.name"
           >
           </fg-input>
-          <fg-input
-            type="text"
-            class="col-md-8 col-xs-12"
-            label="住所"
-            v-model="form.address"
-            :errors="errors.address"
-          >
-          </fg-input>
-          <fg-input
-            type="text"
-            class="col-md-8 col-xs-12"
-            label="url"
-            v-model="form.url"
-            :errors="errors.url"
-          >
-          </fg-input>
         </div>
         <div class="form-group col-md-10 col-xs-12">
           <label>メモ</label>
@@ -77,11 +61,11 @@
       <!-- /form items -->
       <!-- buttons -->
       <div class="text-center actions">
-        <button class="btn btn-default" @click="$router.push('/clients')">
+        <button class="btn btn-default" @click="$router.push('/subcontractors')">
           一覧に戻る
         </button>
         <button class="btn btn-info btn-fill btn-wd" @click="onClickSubmit">
-          {{ client.id === null ? "登録する" : "更新する" }}
+          {{ subcontractor.id === null ? "登録する" : "更新する" }}
         </button>
       </div>
       <!-- /buttons -->
@@ -99,15 +83,14 @@
       FileUploader,
     },
     props: {
-      client: {
+      subcontractor: {
         type: Object,
         'default': () => ({
           id: null,
           name: null,
-          address: null,
-          url: null,
           note: null,
           labels: [],
+          icon_path: null,
         })
       },
       labelOptions: {
@@ -122,13 +105,11 @@
     data() {
       return {
         form: {
-          id: this.client.id,
-          name: this.client.name,
-          address: this.client.address,
-          url: this.client.url,
-          note: this.client.note,
-          labels: this.client.labels,
-          icon_path: this.client.icon_path,
+          id: this.subcontractor.id,
+          name: this.subcontractor.name,
+          note: this.subcontractor.note,
+          labels: this.subcontractor.labels,
+          icon_path: this.subcontractor.icon_path,
         },
         need_upload_icon_path: null,
       }

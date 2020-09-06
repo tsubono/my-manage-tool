@@ -42,6 +42,11 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Repositories\Project\Record\RecordRepositoryInterface::class,
             \App\Repositories\Project\Record\RecordRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\Subcontractor\SubcontractorRepositoryInterface::class,
+            \App\Repositories\Subcontractor\SubcontractorRepository::class
+        );
     }
 
     /**

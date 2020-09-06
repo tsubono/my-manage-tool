@@ -17,6 +17,12 @@
       <p>案件管理</p>
     </sidebar-link>
     <sidebar-link
+      to="/subcontractors"
+      :class="{ 'active': $nuxt.$route.name.match(/subcontractors/) }">
+      <i class="ti-palette"></i>
+      <p>外注先管理</p>
+    </sidebar-link>
+    <sidebar-link
       to="/todos"
       :class="{ 'active': $nuxt.$route.name.match(/todos/) }">
       <i class="ti-arrow-circle-down"></i>

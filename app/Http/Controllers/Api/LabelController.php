@@ -39,6 +39,8 @@ class LabelController extends Controller
         $projectLabels = [];
         // clientのラベル
         $clientLabels = [];
+        // subContractorのラベル
+        $subcontractorLabels = [];
 
         $labels = $this->label::select(['id', 'name', 'type'])->get();
         // typeに応じて振り分け
@@ -47,11 +49,13 @@ class LabelController extends Controller
                 $projectLabels[] = $label;
             } elseif ($label['type'] === Label::TYPE_CLIENT) {
                 $clientLabels[] = $label;
+            } elseif ($label['type'] === Label::TYPE_SUBCONTRACTOR) {
+                $subcontractorLabels[] = $label;
             }
         }
 
         return response()->json(
-            ['data' => compact('projectLabels', 'clientLabels')],
+            ['data' => compact('projectLabels', 'clientLabels', 'subcontractorLabels')],
             200, [],
             JSON_PRETTY_PRINT);
     }

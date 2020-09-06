@@ -58,6 +58,14 @@
               :errors="errors.content"
             ></textarea>
           </div>
+          <fg-input
+            type="number"
+            class="col-md-10 col-xs-12"
+            label="金額"
+            v-model="form.price"
+            :errors="errors.price"
+          >
+          </fg-input>
           <div class="form-group input-wrapper col-md-10 col-xs-12">
             <label>
               開始日
@@ -81,6 +89,31 @@
             ></Datetime>
           </div>
           <div class="form-group col-md-10 col-xs-12">
+            <label>外注先</label>
+            <button class="btn btn-sm btn-success subcontractor-add-btn" @click="addSubcontractor">追加</button>
+          </div>
+          <div class="form-group col-md-10 col-xs-10 col-md-offset-1" v-for="(item, index) in form.subcontractors">
+            <fg-select
+              :options="$utility.getSubcontractorOptions(subcontractorOptions)"
+              select-label="name"
+              track-by="id"
+              @input="$event => item.id = ($event !== null ? $event.id : null)"
+              v-model="item.subcontractor"
+              label="外注先"
+              class="col-md-10 col-xs-12"
+            >
+            </fg-select>
+            <fg-input
+              type="number"
+              class="col-md-10 col-xs-12"
+              label="金額"
+              v-model="item.price"
+            >
+            </fg-input>
+            <button class="btn btn-sm btn-danger col-md-10 col-xs-12" @click="deleteSubcontractor(index)">削除</button>
+          </div>
+          <div class="form-group col-md-10 col-xs-12">
+            <label>ラベル</label>
             <fg-multi-select
               :labelOptions="labelOptions"
               open-direction="top"
@@ -144,9 +177,11 @@
           start_date: null,
           limit_date: null,
           status_id: null,
+          price: 0,
           client: [],
           labels: [],
           status: [],
+          subcontractors: [],
         })
       },
       clientOptions: {
@@ -161,14 +196,29 @@
         type: Array,
         'default': () => []
       },
+      subcontractorOptions: {
+        type: Array,
+        'default': () => []
+      },
       errors: {
         type: Object,
         'default': () => {}
       },
     },
     data() {
+      let subcontractors = [];
+      for(let key in this.project.subcontractors) {
+        if(this.project.subcontractors.hasOwnProperty(key)) {
+          subcontractors[key] = {};
+          subcontractors[key].subcontractor = this.project.subcontractors[key];
+          subcontractors[key].price = this.project.subcontractors[key].pivot.price;
+        }
+      }
       return {
-        form: this.project,
+        form: {
+          ...this.project,
+          subcontractors: subcontractors,
+        },
         isShowStatusModal: false,
       }
     },
@@ -184,7 +234,6 @@
             this.$utility.notifyError(this.$notifications, response.errorMessage !== undefined ? response.errorMessage : null);
             if (response.errors !== undefined) {
               this.errors = response.errors;
-              debugger
             }
           } else {
             this.$utility.notifySuccess(this.$notifications, '更新が完了しました');
@@ -202,6 +251,15 @@
         };
         this.labelOptions.push(label);
         this.form.labels.push(label);
+      },
+      addSubcontractor() {
+        this.form.subcontractors.push({
+          subcontractor: {},
+          price: '',
+        })
+      },
+      deleteSubcontractor(index) {
+        this.form.subcontractors = this.form.subcontractors.filter((s, i) => i !== index);
       },
     }
   }
@@ -231,5 +289,9 @@
 
   .actions {
     margin: 15px auto;
+  }
+
+  .subcontractor-add-btn {
+    margin-left: 10px;
   }
 </style>

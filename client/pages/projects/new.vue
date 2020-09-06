@@ -8,6 +8,7 @@
             :clientOptions="$utility.getClientOptions(clients)"
             :statuses="statuses"
             :labelOptions="labels"
+            :subcontractorOptions="subcontractors"
             @submit="submit"
             :errors="errors"
           >
@@ -44,12 +45,14 @@
         store.dispatch('project/fetch'),
         store.dispatch('client/fetch'),
         store.dispatch('label/fetch'),
+        store.dispatch('subcontractor/fetch'),
       ]);
     },
     computed: {
       ...mapState('project', ['projects', 'statuses']),
       ...mapState('client', ['clients']),
       ...mapState('label', ['projectLabels']),
+      ...mapState('subcontractor', ['subcontractors']),
       labels() {
         return cloneDeep(this.projectLabels);
       },

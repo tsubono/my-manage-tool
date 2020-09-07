@@ -115,7 +115,12 @@
     computed: {
       subcontractor_total_price() {
         if (this.project.subcontractors.length !== 0) {
-          return this.project.subcontractors.reduce((prev, current) => prev.pivot.price + current.pivot.price);
+          if (this.project.subcontractors.length === 1) {
+            return this.project.subcontractors[0].pivot.price;
+          }
+          return this.project.subcontractors.reduce((prev, current) => {
+            return prev.pivot.price + current.pivot.price
+          });
         } else {
           return 0;
         }

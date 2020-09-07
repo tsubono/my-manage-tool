@@ -11,7 +11,7 @@
         <div class="col-sm-12 status-item" v-for="(formStatus, index) in formStatuses">
           <fg-input
             type="text"
-            class="col-md-10 col-md-offset-1 col-xs-12"
+            class="col-md-4 col-md-offset-1 col-xs-8"
             label="名称"
             v-model="formStatuses[index].name"
             :errors="errors['statuses.' + index + '.name'] !== undefined ? errors['statuses.' + index + '.name'] : []"
@@ -19,7 +19,7 @@
           </fg-input>
           <color-picker-input
             type="text"
-            class="col-md-10 col-md-offset-1 col-xs-12"
+            class="col-md-3 col-md-offset-1 col-xs-12"
             label="色"
             v-model="formStatuses[index].color"
             :value="formStatuses[index].color"
@@ -71,12 +71,15 @@
         type: Array,
         'default': () => []
       },
+      errors: {
+        type: Array,
+        'default': () => []
+      },
     },
     data() {
       return {
         formStatuses: cloneDeep(this.statuses),
         deletedStatusIds: [],
-        errors: [],
       }
     },
     methods: {

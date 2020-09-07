@@ -215,6 +215,7 @@
       border-radius: 10px;
       color: #fff;
       font-weight: bold;
+      white-space: nowrap;
     }
 
     .add-button {

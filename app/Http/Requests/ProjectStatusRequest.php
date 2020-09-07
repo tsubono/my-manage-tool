@@ -28,7 +28,7 @@ class ProjectStatusRequest extends FormRequest
     {
         $rules = [
             'statuses' => 'required|array',
-            'statuses.*.name' => 'string',
+            'statuses.*.name' => 'string|max:10',
             'statuses.*.color' => 'string',
         ];
 
@@ -40,7 +40,8 @@ class ProjectStatusRequest extends FormRequest
         return [
             'required'=>':attributeは必須項目です。',
             'string'=>':attributeは文字列で入力してください。',
-            'array'=>':attributeはは配列で指定してください。',
+            'array'=>':attributeは配列で指定してください。',
+            'max'=>':attributeは:max文字以内で入力してください。',
         ];
     }
 

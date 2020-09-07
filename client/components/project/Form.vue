@@ -145,6 +145,7 @@
       :statuses="statuses"
       @update="updateProjectStatuses"
       @close="toggleStatusModal"
+      :errors="errors"
     />
   </div>
 </template>

@@ -105,12 +105,16 @@
 <style lang="scss" scoped>
   #client-list {
     .labels {
+      display: flex;
+      flex-wrap: wrap;
+
       .label {
         background: #9A9A9A;
         margin: 3px;
         border-radius: 10px;
         color: #fff;
         text-align: center;
+        padding: 5px;
       }
     }
 

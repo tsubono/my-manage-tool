@@ -5,7 +5,7 @@ export default {
   ** Headers of the page
   */
   head: {
-    titleTemplate: '%s | 管理画面サンプル',
+    titleTemplate: '%s',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },

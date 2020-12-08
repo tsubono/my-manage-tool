@@ -8,6 +8,11 @@
         <div class="login-form">
           <fg-input v-model="user.email" placeholder="メールアドレス"></fg-input>
           <fg-input v-model="user.password" placeholder="パスワード" type="password"></fg-input>
+          <div class="test-user">
+            【 テストユーザー 】 <br>
+            メールアドレス: test@test.com <br>
+            パスワード: testUserPass <br>
+          </div>
           <button class="btn btn-info btn-fill btn-wd" @click="login">
             ログイン
           </button>
@@ -81,6 +86,12 @@
 
     .register-link {
       padding-top: 10px;
+    }
+
+    .test-user {
+      font-size: 0.6rem;
+      text-align: center;
+      margin: 10px auto;
     }
   }
 </style>

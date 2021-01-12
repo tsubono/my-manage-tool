@@ -118,8 +118,9 @@
           if (this.project.subcontractors.length === 1) {
             return this.project.subcontractors[0].pivot.price;
           }
+          console.log(this.project.subcontractors);
           return this.project.subcontractors.reduce((prev, current) => {
-            return prev.pivot.price + current.pivot.price
+            return prev.pivot.price ?? 0 + current.pivot.price ?? 0
           });
         } else {
           return 0;

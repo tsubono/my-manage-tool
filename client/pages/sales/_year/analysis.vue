@@ -70,14 +70,14 @@
       totalPrice() {
         let totalPrice = 0;
         this.sales.forEach((sale) => {
-          totalPrice += sale.price;
+          totalPrice += Number(sale.price);
         });
         return totalPrice;
       },
       priceAverage() {
         let totalPrice = 0;
         this.priceListByMonth.forEach((price) => {
-          totalPrice += price;
+          totalPrice += Number(price);
         });
 
         return this.totalPrice / this.priceListByMonth.length;

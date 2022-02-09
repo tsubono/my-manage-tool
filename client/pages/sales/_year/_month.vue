@@ -152,7 +152,7 @@
       totalPrice() {
         let totalPrice = 0;
         this.sales.forEach((sale) => {
-          totalPrice += sale.price;
+          totalPrice += Number(sale.price);
         });
         return totalPrice;
       }

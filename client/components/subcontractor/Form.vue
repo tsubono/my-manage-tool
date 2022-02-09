@@ -140,14 +140,19 @@
 
     .edit-icon {
       position: relative;
-      top: 64px;
-      right: 43px;
+      top: -25px;
+      right: -55px;
       cursor: pointer;
       font-size: 20px;
       border-radius: 50%;
-      background: #41B883;
-      padding: 10px;
+      background: #41b883;
+      padding: 10px 12px;
       color: #fff;
+
+      @media (max-width: 480px) {
+        top: 65px;
+        right: 45px;
+      }
 
       &:hover {
         opacity: 0.9;

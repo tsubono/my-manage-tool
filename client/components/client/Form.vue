@@ -159,8 +159,8 @@
 
     .edit-icon {
       position: relative;
-      top: -25px;
-      right: -55px;
+      top: 64px;
+      right: 43px;
       cursor: pointer;
       font-size: 20px;
       border-radius: 50%;
